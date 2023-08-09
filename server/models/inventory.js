@@ -25,4 +25,4 @@ const dataSchema = new Schema({
   },
 });
 
-module.exports = mongoose.model("dataSchema", dataSchema);
+module.exports = mongoose.model("Inventory", dataSchema);
