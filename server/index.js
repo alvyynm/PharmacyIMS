@@ -1,0 +1,62 @@
+const express = require("express");
+const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
+require("dotenv").config();
+const port = process.env.PORT || 8080;
+const uri = process.env.MONGODB_URI;
+
+// const authRoutes = require("./routes/auth");
+
+// const urlRoutes = require("./routes/url");
+// const indexRouter = require("./routes/index");
+
+const app = express();
+
+// Disable the "X-Powered-By" header
+app.disable("x-powered-by");
+
+app.use(bodyParser.json());
+
+// Prevent cors errors
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PATCH, PUT, DELETE"
+  );
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  next();
+});
+
+// app.use("/", indexRouter);
+// app.use("/auth", authRoutes);
+// app.use("/api/v1", urlRoutes);
+
+// error handling middleware
+app.use((error, req, res, next) => {
+  // console.log(error);
+  logger.error(error);
+  const status = error.statusCode || 500;
+  const message = error.message;
+  const data = error.data;
+  res.status(status).json({ message: message, data: data });
+});
+
+const options = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+};
+
+mongoose
+  .connect(uri, options)
+  .then(() => {
+    console.log("MongoDB connected successfully");
+    app.listen(port, () => {
+      //   logger.info(`Server started on port ${port}`);
+      console.log(`Server running at http://localhost:${port}`);
+    });
+  })
+  .catch((error) => {
+    console.error("MongoDB connection error", error);
+    // logger.error(error);
+  });
