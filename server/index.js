@@ -5,10 +5,9 @@ require("dotenv").config();
 const port = process.env.PORT || 8080;
 const uri = process.env.MONGODB_URI;
 
-// const authRoutes = require("./routes/auth");
-
-// const urlRoutes = require("./routes/url");
-// const indexRouter = require("./routes/index");
+// import routes
+const authRoutes = require("./routes/auth");
+const productRoutes = require("./routes/data");
 
 const app = express();
 
@@ -28,9 +27,8 @@ app.use((req, res, next) => {
   next();
 });
 
-// app.use("/", indexRouter);
-// app.use("/auth", authRoutes);
-// app.use("/api/v1", urlRoutes);
+app.use("/auth", authRoutes);
+app.use("/v1", productRoutes);
 
 // error handling middleware
 app.use((error, req, res, next) => {
