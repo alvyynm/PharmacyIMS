@@ -1,4 +1,5 @@
 const express = require("express");
+const { body, check } = require("express-validator");
 const data = require("../models/inventory");
 const isAuth = require("../middleware/is-auth");
 const router = express.Router();
@@ -20,7 +21,7 @@ router.post(
 );
 
 //GET /v1/post/postId
-router.get("/post/:postId", isAuth, dataController.getPost);
+// router.get("/post/:postId", isAuth, dataController.getPost);
 
 //PUT /v1/product/productId
 router.put(
@@ -34,6 +35,6 @@ router.put(
 );
 
 //DELETE /v1/product/productId
-router.delete("/product/:productId", isAuth, feedController.deleteProduct);
+router.delete("/product/:productId", isAuth, dataController.deleteProduct);
 
 module.exports = router;
