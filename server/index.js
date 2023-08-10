@@ -32,8 +32,8 @@ app.use("/v1", productRoutes);
 
 // error handling middleware
 app.use((error, req, res, next) => {
-  // console.log(error);
-  logger.error(error);
+  console.log(error);
+  // logger.error(error);
   const status = error.statusCode || 500;
   const message = error.message;
   const data = error.data;
