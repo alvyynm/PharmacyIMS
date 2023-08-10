@@ -2,6 +2,7 @@ const express = require("express");
 const { body } = require("express-validator");
 
 const router = express.Router();
+const User = require("../models/user");
 const authController = require("../controllers/auth");
 
 // PUT /auth/signup
@@ -11,15 +12,15 @@ router.put(
     body("email")
       .trim()
       .isEmail()
-      .withMessage("Invalid credentials")
+      .withMessage("Enter a valid email")
       .custom((value, { req }) => {
-        User.findOne({ email: value }).then((userDoc) => {
+        return User.findOne({ email: value }).then((userDoc) => {
           if (userDoc) {
             return Promise.reject("Email address already exists!");
           }
         });
       })
-      .normalizeEmail({ gmail_remove_dots: false }),
+      .normalizeEmail(),
     body("password")
       .trim()
       .not()
