@@ -33,7 +33,7 @@ exports.createProduct = (req, res, next) => {
   const shelfNumber = req.body.shelfNumber;
 
   // Create product in db
-  const product = new Product({
+  const product = new Inventory({
     name: name,
     unitPrice: price,
     category: category,
@@ -77,7 +77,7 @@ exports.updateProduct = (req, res, next) => {
   const shelfNumber = req.body.shelfNumber;
 
   // update data in db
-  Product.findById(productId)
+  Inventory.findById(productId)
     .then((product) => {
       if (!product) {
         const error = new Error("Could not find product.");
@@ -112,7 +112,7 @@ exports.updateProduct = (req, res, next) => {
 exports.deleteProduct = (req, res, next) => {
   const productId = req.params.productId;
 
-  Product.findById(productId)
+  Inventory.findById(productId)
     .then((product) => {
       // check if product is found
       if (!product) {
@@ -129,7 +129,7 @@ exports.deleteProduct = (req, res, next) => {
       //     throw error;
       //   }
 
-      return Product.findByIdAndRemove(productId);
+      return Inventory.findByIdAndRemove(productId);
     })
     .then((result) => {
       console.log(result);
