@@ -9,7 +9,7 @@ const dataController = require("../controllers/data");
 // GET /v1/products
 router.get("/products", isAuth, dataController.getProducts);
 
-// POST /v1/product
+// POST /v1/post
 router.post(
   "/post",
   isAuth,
