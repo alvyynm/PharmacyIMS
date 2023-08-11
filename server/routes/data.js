@@ -19,6 +19,7 @@ router.post(
     body("category").trim().isLength({ min: 4 }),
     body("quantity").trim().isLength({ min: 1 }),
     body("shelfNumber").trim().isLength({ min: 2 }),
+    body("expiryDate").trim(),
   ],
   dataController.createProduct
 );
@@ -36,6 +37,7 @@ router.put(
     body("category").trim().isLength({ min: 4 }),
     body("quantity").trim().isLength({ min: 1 }),
     body("shelfNumber").trim().isLength({ min: 2 }),
+    body("expiryDate").trim(),
   ],
   dataController.updateProduct
 );

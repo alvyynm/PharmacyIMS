@@ -31,6 +31,7 @@ exports.createProduct = (req, res, next) => {
   const category = req.body.category;
   const quantity = req.body.quantity;
   const shelfNumber = req.body.shelfNumber;
+  const expiryDate = req.body.expiryDate;
 
   // Create product in db
   const product = new Inventory({
@@ -39,6 +40,7 @@ exports.createProduct = (req, res, next) => {
     category: category,
     quantityInStock: quantity,
     shelfNumber: shelfNumber,
+    expiryDate: expiryDate,
   });
 
   product
@@ -75,6 +77,7 @@ exports.updateProduct = (req, res, next) => {
   const category = req.body.category;
   const quantity = req.body.quantity;
   const shelfNumber = req.body.shelfNumber;
+  const expiryDate = req.body.expiryDate;
 
   // update data in db
   Inventory.findById(productId)
@@ -90,6 +93,7 @@ exports.updateProduct = (req, res, next) => {
       product.category = category;
       product.quantityInStock = quantity;
       product.shelfNumber = shelfNumber;
+      product.expiryDate = expiryDate;
 
       //save changes
       return product.save();
