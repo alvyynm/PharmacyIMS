@@ -14,8 +14,11 @@ router.post(
   "/post",
   isAuth,
   [
-    body("title").trim().isLength({ min: 5 }),
-    body("content").trim().isLength({ min: 5 }),
+    body("name").trim().isLength({ min: 5 }),
+    body("price").trim().isLength({ min: 1 }),
+    body("category").trim().isLength({ min: 4 }),
+    body("quantity").trim().isLength({ min: 1 }),
+    body("shelfNumber").trim().isLength({ min: 2 }),
   ],
   dataController.createProduct
 );
@@ -28,8 +31,11 @@ router.put(
   "/product/:productId",
   isAuth,
   [
-    body("title").trim().isLength({ min: 5 }),
-    body("content").trim().isLength({ min: 5 }),
+    body("name").trim().isLength({ min: 5 }),
+    body("price").trim().isLength({ min: 1 }),
+    body("category").trim().isLength({ min: 4 }),
+    body("quantity").trim().isLength({ min: 1 }),
+    body("shelfNumber").trim().isLength({ min: 2 }),
   ],
   dataController.updateProduct
 );
