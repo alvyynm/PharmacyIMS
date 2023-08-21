@@ -23,8 +23,10 @@ const productSchema = new Schema({
     type: String,
     required: true,
   },
-  expiryDate: Date,
-  required: true,
+  expiryDate: {
+    type: Date,
+    required: true,
+  },
 });
 
 module.exports = mongoose.model("Inventory", productSchema);
