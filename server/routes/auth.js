@@ -54,4 +54,7 @@ router.post(
   authController.login
 );
 
+// POST /auth/logout
+router.post("/logout", authController.logout);
+
 module.exports = router;

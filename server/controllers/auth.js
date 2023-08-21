@@ -105,3 +105,13 @@ exports.login = (req, res, next) => {
       next(error);
     });
 };
+
+exports.logout = async (req, res) => {
+  res.cookie("token", "", {
+    httpOnly: true,
+    expires: new Date(Date.now() + 1000),
+  });
+  return res
+    .status(200)
+    .json({ success: true, msg: "User successfully logged out" });
+};
