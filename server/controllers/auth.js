@@ -1,9 +1,15 @@
+const redis = require("redis");
+const JWTR = require("jwt-redis").default;
 const bcrypt = require("bcryptjs");
 const { validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
+const redisClient = redis.createClient();
+// await redisClient.connect();
+const jwtr = new JWTR(redisClient);
 
 const secret = process.env.MY_SECRET_KEY;
+const tokenIdentifier = "test";
 
 const User = require("../models/user");
 
@@ -80,17 +86,15 @@ exports.login = (req, res, next) => {
         throw error;
       }
 
+      const payload = {
+        jti: tokenIdentifier,
+        email: loggedInUser.email,
+        userId: loggedInUser._id.toString(),
+      };
       // create jwt token and return it to the user
-      const token = jwt.sign(
-        {
-          email: loggedInUser.email,
-          userId: loggedInUser._id.toString(),
-        },
-        secret,
-        {
-          expiresIn: "4h",
-        }
-      );
+      const token = jwtr.sign(payload, secret, {
+        expiresIn: "4h",
+      });
       res.status(200).json({
         message: "Login successful!",
         token: token,
