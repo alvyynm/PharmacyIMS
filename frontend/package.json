@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@tremor/react": "^1.1.5",
+    "antd": "^5.8.4",
     "flowbite": "^1.5.4",
     "flowbite-react": "^0.3.5",
     "heroicons": "^1.0.6",
