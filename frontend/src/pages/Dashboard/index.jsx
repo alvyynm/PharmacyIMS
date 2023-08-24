@@ -1,56 +1,56 @@
-import React from "react";
-import Navbar from "../../components/Navbar";
-import Topbar from "../../components/Topbar";
+import React from 'react';
+import Navbar from '../../components/Navbar';
+import Topbar from '../../components/Topbar';
 
 //Icons
-import energyIcon from "../../assets/icons/energy.svg";
-import rangeIcon from "../../assets/icons/range.svg";
-import brakeIcon from "../../assets/icons/brake.svg";
-import wearIcon from "../../assets/icons/wear.svg";
-import energychart from "../../assets/icons/energychart.svg";
-import rangechart from "../../assets/icons/rangechart.svg";
-import brakechart from "../../assets/icons/brakechart.svg";
-import wearchart from "../../assets/icons/wearchart.svg";
-import recommend from "../../assets/icons/recommend.svg";
-import reshare from "../../assets/icons/reshare.svg";
-import setting from "../../assets/icons/setting.png";
-import light from "../../assets/icons/light.svg";
+import energyIcon from '../../assets/icons/energy.svg';
+import rangeIcon from '../../assets/icons/range.svg';
+import brakeIcon from '../../assets/icons/brake.svg';
+import wearIcon from '../../assets/icons/wear.svg';
+import energychart from '../../assets/icons/energychart.svg';
+import rangechart from '../../assets/icons/rangechart.svg';
+import brakechart from '../../assets/icons/brakechart.svg';
+import wearchart from '../../assets/icons/wearchart.svg';
+import recommend from '../../assets/icons/recommend.svg';
+import reshare from '../../assets/icons/reshare.svg';
+import setting from '../../assets/icons/setting.png';
+import light from '../../assets/icons/light.svg';
 
 // Car images
-import minicooper from "../../assets/minicooper.png";
-import bmwminicooper from "../../assets/suzukiswift.png";
-import suzukiswift from "../../assets/bmwminicooper.png";
+import minicooper from '../../assets/minicooper.png';
+import bmwminicooper from '../../assets/suzukiswift.png';
+import suzukiswift from '../../assets/bmwminicooper.png';
 
 // Tremor imports for charts
-import { Card, Title, BarChart, Subtitle, LineChart } from "@tremor/react";
+import { Card, Title, BarChart, Subtitle, LineChart } from '@tremor/react';
 
 const milesdata = [
   {
-    name: "1 PM",
+    name: '1 PM',
     Miles: 2488,
   },
   {
-    name: "2 PM",
+    name: '2 PM',
     Miles: 1445,
   },
   {
-    name: "3 PM",
+    name: '3 PM',
     Miles: 1600,
   },
   {
-    name: "4 PM",
+    name: '4 PM',
     Miles: 1200,
   },
   {
-    name: "5 PM",
+    name: '5 PM',
     Miles: 1900,
   },
   {
-    name: "6 PM",
+    name: '6 PM',
     Miles: 1643,
   },
   {
-    name: "7 PM",
+    name: '7 PM',
     Miles: 743,
   },
 ];
@@ -94,8 +94,7 @@ const carsalesdata = [
   },
 ];
 
-const dataFormatter = (number) =>
-  `${Intl.NumberFormat("us").format(number).toString()}M`;
+const dataFormatter = (number) => `${Intl.NumberFormat('us').format(number).toString()}M`;
 
 function index() {
   return (
@@ -129,9 +128,7 @@ function index() {
                   <img src={rangeIcon} alt="" />
                 </div>
                 <div>
-                  <h2 className="text-custom-black font-bold text-2xl">
-                    Range
-                  </h2>
+                  <h2 className="text-custom-black font-bold text-2xl">Range</h2>
                 </div>
                 <div>
                   <img src={rangechart} alt="" />
@@ -142,9 +139,7 @@ function index() {
                   <img src={brakeIcon} alt="" />
                 </div>
                 <div>
-                  <h2 className="text-custom-black font-bold text-2xl">
-                    Brake Fluid
-                  </h2>
+                  <h2 className="text-custom-black font-bold text-2xl">Brake Fluid</h2>
                 </div>
                 <div>
                   <img src={brakechart} alt="" />
@@ -155,9 +150,7 @@ function index() {
                   <img src={wearIcon} alt="" />
                 </div>
                 <div>
-                  <h2 className="text-custom-black font-bold text-2xl">
-                    Tire Wear
-                  </h2>
+                  <h2 className="text-custom-black font-bold text-2xl">Tire Wear</h2>
                 </div>
                 <div>
                   <img src={wearchart} alt="" />
@@ -168,15 +161,14 @@ function index() {
               <div className="rounded-2xl overflow-hidden">
                 <Card>
                   <Title>
-                    {" "}
-                    <h2 className="text-xl inline font-bold">Miles</h2>{" "}
-                    Statistics
+                    {' '}
+                    <h2 className="text-xl inline font-bold">Miles</h2> Statistics
                   </Title>
                   <BarChart
                     data={milesdata}
                     dataKey="name"
-                    categories={["Miles"]}
-                    colors={["CornflowerBlue"]}
+                    categories={['Miles']}
+                    colors={['CornflowerBlue']}
                     marginTop="mt-6"
                     yAxisWidth="w-12"
                     showYAxis={false}
@@ -193,8 +185,8 @@ function index() {
                   <LineChart
                     data={carsalesdata}
                     dataKey="year"
-                    categories={["Sales"]}
-                    colors={["orange"]}
+                    categories={['Sales']}
+                    colors={['orange']}
                     valueFormatter={dataFormatter}
                     marginTop="mt-0"
                     height="h-80"
@@ -207,7 +199,7 @@ function index() {
             {/* Car section starts */}
             <div>
               <h2 className="text-3xl font-bold flex place-items-center gap-2 mb-5">
-                Hot Deals{" "}
+                Hot Deals{' '}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="#E25822"
@@ -233,7 +225,7 @@ function index() {
                 <div className="w-[320px] h-60 flex flex-col justify-between bg-[#E1DFA4] py-4 px-7 rounded-xl">
                   <div>
                     <h2 className="font-bold flex gap-3">
-                      {" "}
+                      {' '}
                       <img src={recommend} alt="" /> 64% Recommended
                     </h2>
                   </div>
@@ -241,9 +233,7 @@ function index() {
                     <img src={minicooper} alt="Minicooper" />
                   </div>
                   <div>
-                    <h3 className="text-custom-black text-xl font-bold mb-2">
-                      Mini Cooper
-                    </h3>
+                    <h3 className="text-custom-black text-xl font-bold mb-2">Mini Cooper</h3>
                     <div className="flex justify-between text-custom-gray2">
                       <div className="flex gap-4">
                         <img src={reshare} alt="" />
@@ -260,7 +250,7 @@ function index() {
                 <div className="w-[320px] h-60 flex flex-col justify-between bg-[#E3ECF1] py-4 px-7 rounded-xl ">
                   <div>
                     <h2 className="font-bold flex gap-3">
-                      {" "}
+                      {' '}
                       <img src={recommend} alt="" /> 74% Recommended
                     </h2>
                   </div>
@@ -268,9 +258,7 @@ function index() {
                     <img src={bmwminicooper} alt="Minicooper" />
                   </div>
                   <div>
-                    <h3 className="text-custom-black text-xl font-bold mb-2">
-                      BMW Sedan
-                    </h3>
+                    <h3 className="text-custom-black text-xl font-bold mb-2">BMW Sedan</h3>
                     <div className="flex justify-between text-custom-gray2">
                       <div className="flex gap-4">
                         <img src={reshare} alt="" />
@@ -287,7 +275,7 @@ function index() {
                 <div className="w-[320px] h-60 flex flex-col justify-between bg-[#F4E3E5] py-4 px-7 rounded-xl ">
                   <div>
                     <h2 className="font-bold flex gap-3">
-                      {" "}
+                      {' '}
                       <img src={recommend} alt="" /> 74% Recommended
                     </h2>
                   </div>
@@ -295,9 +283,7 @@ function index() {
                     <img src={suzukiswift} alt="Minicooper" />
                   </div>
                   <div>
-                    <h3 className="text-custom-black text-xl font-bold mb-2">
-                      Suzuki Swift
-                    </h3>
+                    <h3 className="text-custom-black text-xl font-bold mb-2">Suzuki Swift</h3>
                     <div className="flex justify-between text-custom-gray2">
                       <div className="flex gap-4">
                         <img src={reshare} alt="" />
@@ -314,7 +300,7 @@ function index() {
                 <div className="w-[320px] h-60 flex flex-col justify-between bg-[#F0CAA3] py-4 px-7 rounded-xl">
                   <div>
                     <h2 className="font-bold flex gap-3">
-                      {" "}
+                      {' '}
                       <img src={recommend} alt="" /> 64% Recommended
                     </h2>
                   </div>
@@ -322,9 +308,7 @@ function index() {
                     <img src={minicooper} alt="Minicooper" />
                   </div>
                   <div>
-                    <h3 className="text-custom-black text-xl font-bold mb-2">
-                      Mini Cooper
-                    </h3>
+                    <h3 className="text-custom-black text-xl font-bold mb-2">Mini Cooper</h3>
                     <div className="flex justify-between text-custom-gray2">
                       <div className="flex gap-4">
                         <img src={reshare} alt="" />
@@ -341,7 +325,7 @@ function index() {
                 <div className="w-[320px] h-60 flex flex-col justify-between bg-[#DEF5E5] py-4 px-7 rounded-xl ">
                   <div>
                     <h2 className="font-bold flex gap-3">
-                      {" "}
+                      {' '}
                       <img src={recommend} alt="" /> 74% Recommended
                     </h2>
                   </div>
@@ -349,9 +333,7 @@ function index() {
                     <img src={bmwminicooper} alt="Minicooper" />
                   </div>
                   <div>
-                    <h3 className="text-custom-black text-xl font-bold mb-2">
-                      BMW Sedan
-                    </h3>
+                    <h3 className="text-custom-black text-xl font-bold mb-2">BMW Sedan</h3>
                     <div className="flex justify-between text-custom-gray2">
                       <div className="flex gap-4">
                         <img src={reshare} alt="" />
@@ -368,7 +350,7 @@ function index() {
                 <div className="w-[320px] h-60 flex flex-col justify-between bg-[#DEBACE] py-4 px-7 rounded-xl">
                   <div>
                     <h2 className="font-bold flex gap-3">
-                      {" "}
+                      {' '}
                       <img src={recommend} alt="" /> 64% Recommended
                     </h2>
                   </div>
@@ -376,9 +358,7 @@ function index() {
                     <img src={minicooper} alt="Minicooper" />
                   </div>
                   <div>
-                    <h3 className="text-custom-black text-xl font-bold mb-2">
-                      Mini Cooper
-                    </h3>
+                    <h3 className="text-custom-black text-xl font-bold mb-2">Mini Cooper</h3>
                     <div className="flex justify-between text-custom-gray2">
                       <div className="flex gap-4">
                         <img src={reshare} alt="" />
@@ -395,7 +375,7 @@ function index() {
                 <div className="w-[320px] h-60 flex flex-col justify-between bg-[#E1DFA4] py-4 px-7 rounded-xl">
                   <div>
                     <h2 className="font-bold flex gap-3">
-                      {" "}
+                      {' '}
                       <img src={recommend} alt="" /> 64% Recommended
                     </h2>
                   </div>
@@ -403,9 +383,7 @@ function index() {
                     <img src={minicooper} alt="Minicooper" />
                   </div>
                   <div>
-                    <h3 className="text-custom-black text-xl font-bold mb-2">
-                      Mini Cooper
-                    </h3>
+                    <h3 className="text-custom-black text-xl font-bold mb-2">Mini Cooper</h3>
                     <div className="flex justify-between text-custom-gray2">
                       <div className="flex gap-4">
                         <img src={reshare} alt="" />
@@ -422,7 +400,7 @@ function index() {
                 <div className="w-[320px] h-60 flex flex-col justify-between bg-[#FFE3E1] py-4 px-7 rounded-xl ">
                   <div>
                     <h2 className="font-bold flex gap-3">
-                      {" "}
+                      {' '}
                       <img src={recommend} alt="" /> 74% Recommended
                     </h2>
                   </div>
@@ -430,9 +408,7 @@ function index() {
                     <img src={suzukiswift} alt="Minicooper" />
                   </div>
                   <div>
-                    <h3 className="text-custom-black text-xl font-bold mb-2">
-                      Suzuki Swift
-                    </h3>
+                    <h3 className="text-custom-black text-xl font-bold mb-2">Suzuki Swift</h3>
                     <div className="flex justify-between text-custom-gray2">
                       <div className="flex gap-4">
                         <img src={reshare} alt="" />
@@ -449,7 +425,7 @@ function index() {
                 <div className="w-[320px] h-60 flex flex-col justify-between bg-[#E1DFA4] py-4 px-7 rounded-xl">
                   <div>
                     <h2 className="font-bold flex gap-3">
-                      {" "}
+                      {' '}
                       <img src={recommend} alt="" /> 64% Recommended
                     </h2>
                   </div>
@@ -457,9 +433,7 @@ function index() {
                     <img src={minicooper} alt="Minicooper" />
                   </div>
                   <div>
-                    <h3 className="text-custom-black text-xl font-bold mb-2">
-                      Mini Cooper
-                    </h3>
+                    <h3 className="text-custom-black text-xl font-bold mb-2">Mini Cooper</h3>
                     <div className="flex justify-between text-custom-gray2">
                       <div className="flex gap-4">
                         <img src={reshare} alt="" />
@@ -476,7 +450,7 @@ function index() {
                 <div className="w-[320px] h-60 flex flex-col justify-between bg-[#F4E3E5] py-4 px-7 rounded-xl ">
                   <div>
                     <h2 className="font-bold flex gap-3">
-                      {" "}
+                      {' '}
                       <img src={recommend} alt="" /> 74% Recommended
                     </h2>
                   </div>
@@ -484,9 +458,7 @@ function index() {
                     <img src={suzukiswift} alt="Minicooper" />
                   </div>
                   <div>
-                    <h3 className="text-custom-black text-xl font-bold mb-2">
-                      Suzuki Swift
-                    </h3>
+                    <h3 className="text-custom-black text-xl font-bold mb-2">Suzuki Swift</h3>
                     <div className="flex justify-between text-custom-gray2">
                       <div className="flex gap-4">
                         <img src={reshare} alt="" />
@@ -503,7 +475,7 @@ function index() {
                 <div className="w-[320px] h-60 flex flex-col justify-between bg-[#E1DFA4] py-4 px-7 rounded-xl">
                   <div>
                     <h2 className="font-bold flex gap-3">
-                      {" "}
+                      {' '}
                       <img src={recommend} alt="" /> 64% Recommended
                     </h2>
                   </div>
@@ -511,9 +483,7 @@ function index() {
                     <img src={minicooper} alt="Minicooper" />
                   </div>
                   <div>
-                    <h3 className="text-custom-black text-xl font-bold mb-2">
-                      Mini Cooper
-                    </h3>
+                    <h3 className="text-custom-black text-xl font-bold mb-2">Mini Cooper</h3>
                     <div className="flex justify-between text-custom-gray2">
                       <div className="flex gap-4">
                         <img src={reshare} alt="" />
@@ -530,7 +500,7 @@ function index() {
                 <div className="w-[320px] h-60 flex flex-col justify-between bg-[#F4E3E5] py-4 px-7 rounded-xl ">
                   <div>
                     <h2 className="font-bold flex gap-3">
-                      {" "}
+                      {' '}
                       <img src={recommend} alt="" /> 74% Recommended
                     </h2>
                   </div>
@@ -538,9 +508,7 @@ function index() {
                     <img src={suzukiswift} alt="Minicooper" />
                   </div>
                   <div>
-                    <h3 className="text-custom-black text-xl font-bold mb-2">
-                      Suzuki Swift
-                    </h3>
+                    <h3 className="text-custom-black text-xl font-bold mb-2">Suzuki Swift</h3>
                     <div className="flex justify-between text-custom-gray2">
                       <div className="flex gap-4">
                         <img src={reshare} alt="" />

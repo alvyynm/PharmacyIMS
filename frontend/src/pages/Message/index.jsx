@@ -1,6 +1,6 @@
-import React from "react";
-import Navbar from "../../components/Navbar";
-import Topbar from "../../components/Topbar";
+import React from 'react';
+import Navbar from '../../components/Navbar';
+import Topbar from '../../components/Topbar';
 
 function index() {
   return (
