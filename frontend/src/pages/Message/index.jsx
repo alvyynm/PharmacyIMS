@@ -11,6 +11,7 @@ function index() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [edit, setEdit] = useState(null);
   const [formData, setFormData] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const columns = [
     {
@@ -19,6 +20,10 @@ function index() {
       dataIndex: 'name',
       sorter: (a, b) => a.name > b.name,
       sortDirections: ['descend'],
+      onFilter: (value, record) => {
+        return record.name.includes(value);
+      },
+      filteredValue: [searchTerm],
     },
     {
       key: 'email',
@@ -123,12 +128,21 @@ function index() {
           <h1 className="my-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
             List of drugs
           </h1>
-          <div>
+          <div className="flex justify-between mb-4">
+            <div>
+              <Input.Search
+                onSearch={(value) => {
+                  setSearchTerm(value);
+                }}
+                placeholder="Search for drugs"
+                // style={{ borderRadius: '0.5rem', display: 'block' }}
+              />
+            </div>
             <button
               onClick={() => {
                 setIsAddModalOpen(true);
               }}
-              className="flex w-48 justify-center rounded-md mb-4 bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              className="flex w-48 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
               Add new record
             </button>
