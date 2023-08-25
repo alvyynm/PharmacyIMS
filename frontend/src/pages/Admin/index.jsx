@@ -1,13 +1,89 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { employeeData } from '../../data/Employee';
+import { Table, Modal, Input } from 'antd';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import Navbar from '../../components/Navbar';
 import Topbar from '../../components/Topbar';
 
-// Images
-import cartopview from '../../assets/car-top-view-a.png';
-
-import { AreaChart } from '@tremor/react';
-
 function index() {
+  const [Data, setData] = useState(employeeData);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [edit, setEdit] = useState(null);
+
+  const columns = [
+    {
+      key: 'name',
+      title: 'Name',
+      dataIndex: 'name',
+    },
+    {
+      key: 'email',
+      title: 'Email',
+      dataIndex: 'email',
+    },
+    {
+      key: 'phone',
+      title: 'Phone Number',
+      dataIndex: 'phone',
+    },
+    {
+      key: 'role',
+      title: 'Role',
+      dataIndex: 'role',
+      filters: [
+        {
+          text: 'ADMIN',
+          value: 'ADMIN',
+        },
+        {
+          text: 'USER',
+          value: 'USER',
+        },
+      ],
+      onFilter: (value, record) => record.role.indexOf(value) === 0,
+    },
+    {
+      key: 'action',
+      title: 'Actions',
+      render: (record) => {
+        return (
+          <>
+            <div className="flex gap-4">
+              <EditOutlined style={{ color: 'black' }} onClick={() => Edit(record)} />
+              <DeleteOutlined style={{ color: 'red' }} onClick={() => Delete(record)} />
+            </div>
+          </>
+        );
+      },
+    },
+  ];
+
+  const Delete = (record) => {
+    Modal.confirm({
+      title: 'Are you sure you want to delete this user?',
+      okText: 'Yes',
+      okType: 'danger',
+      cancelText: 'No',
+      onOk: () => {
+        setData((pre) => {
+          return pre.filter((person) => person.id != record.id);
+        });
+      },
+    });
+  };
+
+  // Edit user records
+  const Edit = (record) => {
+    setIsModalOpen(true);
+    setEdit({ ...record });
+  };
+
+  // Cancel editing and reset data to initial state
+  const ResetEditing = () => {
+    setEdit(null);
+    setIsModalOpen(false);
+  };
+
   return (
     <section className="relative">
       <div className="grid grid-cols-6 grid-rows-1 gap-12">
@@ -20,56 +96,74 @@ function index() {
           <div className="sticky top-0 left-0 right-0 z-50 bg-white">
             <Topbar />
           </div>
-
-          <div className="p-8 bg-neutral-100">
-            <h1 className="text-[#242731] text-3xl font-bold mb-5">Admin Settings</h1>
-            <div className="grid grid-rows-1 grid-cols-3 gap-6">
-              {/* Big car card */}
-              <div className="w-[361px] py-8 px-6 rounded-xl bg-[#438FFE]">
-                <div className="mb-12">
-                  <div className="grid grid-cols-2 grid-rows-1 gap-2">
-                    <div className="border-r-2 border-[#579BFF]">
-                      <h2 className=" text-[#C6DCFC] font-medium">Fuel Usage</h2>
-                      <p className="text-xl text-white font-bold">2903.89 Ltr</p>
-                    </div>
-                    <div className="ml-5">
-                      <h2 className="text-[#C6DCFC] font-medium">KM driven</h2>
-                      <p className="text-xl text-white font-bold">3038</p>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 grid-rows-1 gap-2 mt-5">
-                    <div className="border-r-2 border-[#579BFF]">
-                      <h2 className="text-[#C6DCFC] font-medium">Total Cost</h2>
-                      <p className="text-xl text-white font-bold">$3,00,290.00</p>
-                    </div>
-                    <div className="ml-5">
-                      <h2 className="text-[#C6DCFC] font-medium">Top Speed</h2>
-                      <p className="text-xl text-white font-bold">360km/h</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className=" h-[400px] relative">
-                  <div className="absolute bottom-[-200px] ">
-                    <img src={cartopview} alt="A view of a car from the top" />
-                  </div>
-                </div>
-              </div>
-              {/* Big car card ends */}
-
-              <div className="col-span-2">
-                <div className="grid grid-cols-1 grid-rows-3 gap-5">
-                  <div className=" h-[314px] bg-yellow-300 rounded-xl">Activities</div>
-                  <div className="grid grid-cols-2 grid-rows-1 gap-6 lg:gap-20">
-                    <div className="h-[314px] bg-yellow-300 rounded-xl">Notices</div>
-                    <div className="h-[314px] bg-yellow-300 rounded-xl">Available sensors</div>
-                  </div>
-                  <div className=" h-[314px] bg-yellow-300 rounded-xl">Reminders</div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <h1 className="my-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+            Employee List
+          </h1>
+          <Table dataSource={Data} columns={columns} pagination={false} />
+          <Modal
+            title="Edit Details"
+            open={isModalOpen}
+            okText="Save"
+            onCancel={() => ResetEditing()}
+            onOk={() => {
+              setData((pre) => {
+                return pre.map((employee) => {
+                  if (employee.id === edit.id) {
+                    return edit;
+                  } else {
+                    return employee;
+                  }
+                });
+              });
+              ResetEditing();
+            }}
+          >
+            <Input
+              value={edit?.name}
+              onChange={(e) => {
+                setEdit((pre) => {
+                  return { ...pre, name: e.target.value };
+                });
+              }}
+              className="mb-3 rounded-lg"
+            />
+            <Input
+              value={edit?.email}
+              onChange={(e) => {
+                setEdit((pre) => {
+                  return { ...pre, email: e.target.value };
+                });
+              }}
+              className="mb-3 rounded-lg"
+            />
+            {/* <Input
+              value={edit?.address}
+              onChange={(e) => {
+                setEdit((pre) => {
+                  return { ...pre, address: e.target.value };
+                });
+              }}
+              className="mb-3 rounded-lg"
+            /> */}
+            <Input
+              value={edit?.phone}
+              onChange={(e) => {
+                setEdit((pre) => {
+                  return { ...pre, phone: e.target.value };
+                });
+              }}
+              className="mb-3 rounded-lg"
+            />
+            <Input
+              value={edit?.role}
+              onChange={(e) => {
+                setEdit((pre) => {
+                  return { ...pre, role: e.target.value };
+                });
+              }}
+              className="mb-3 rounded-lg"
+            />
+          </Modal>
         </main>
       </div>
     </section>
