@@ -17,6 +17,8 @@ function index() {
       key: 'name',
       title: 'Name',
       dataIndex: 'name',
+      sorter: (a, b) => a.name > b.name,
+      sortDirections: ['descend'],
     },
     {
       key: 'email',
@@ -32,6 +34,8 @@ function index() {
       key: 'phone',
       title: 'Phone Number',
       dataIndex: 'phone',
+      sorter: (a, b) => a.phone > b.phone,
+      sortDirections: ['descend'],
     },
     {
       key: 'website',
