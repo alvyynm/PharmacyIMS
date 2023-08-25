@@ -129,7 +129,11 @@ function index() {
               Add new record
             </button>
           </div>
-          <Table dataSource={Data} columns={columns} pagination={false} />
+          <Table
+            dataSource={Data}
+            columns={columns}
+            pagination={{ pageSize: 9, total: 50, showSizeChanger: false }}
+          />
 
           {/* Edit record modal */}
           <Modal
