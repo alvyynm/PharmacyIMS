@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { AuthContext } from '../../context/AuthContext';
 
 export default function index() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [authenticated, setAuthenticated] = useState(
-    localStorage.getItem(localStorage.getItem('authenticated') || false)
-  );
+
+  const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
 
   const notify = () => {
     toast.error('Ooops! No credentials provided', {
@@ -37,7 +37,7 @@ export default function index() {
         localStorage.setItem('isAuthenticated', true);
         localStorage.setItem('userId', response.data.userId);
 
-        setAuthenticated(true);
+        setIsLoggedIn(true);
 
         //redirect to dashboard page if authenticated
         navigate('/dashboard');
@@ -48,6 +48,20 @@ export default function index() {
     } else {
       // display error message
       notify();
+    }
+  };
+
+  // check login status on page reload
+
+  useEffect(() => {
+    checkLoginStatus();
+  }, []);
+
+  const checkLoginStatus = () => {
+    if (localStorage.getItem('token')) {
+      setIsLoggedIn(true);
+      console.log('Logged in');
+      navigate('/dashboard');
     }
   };
 

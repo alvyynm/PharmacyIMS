@@ -1,4 +1,26 @@
-export default function Example() {
+import { useContext, useEffect } from 'react';
+import { AuthContext } from '../../context/AuthContext';
+// import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+
+export default function index() {
+  const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  // check login status on page reload
+
+  useEffect(() => {
+    checkLoginStatus();
+  }, []);
+
+  const checkLoginStatus = () => {
+    if (localStorage.getItem('token')) {
+      setIsLoggedIn(true);
+      console.log('Logged in');
+      navigate('/dashboard');
+    }
+  };
+
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
