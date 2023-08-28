@@ -9,12 +9,17 @@ function index() {
   const [Data, setData] = useState(employeeData);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [edit, setEdit] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const columns = [
     {
       key: 'name',
       title: 'Name',
       dataIndex: 'name',
+      onFilter: (value, record) => {
+        return record.name.includes(value);
+      },
+      filteredValue: [searchTerm],
     },
     {
       key: 'email',
@@ -99,6 +104,25 @@ function index() {
           <h1 className="my-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
             Employee List
           </h1>
+          <div className="flex justify-between mb-4">
+            <div>
+              <Input.Search
+                onSearch={(value) => {
+                  setSearchTerm(value);
+                }}
+                placeholder="Search for employee"
+                // style={{ borderRadius: '0.5rem', display: 'block' }}
+              />
+            </div>
+            <button
+              onClick={() => {
+                setIsAddModalOpen(true);
+              }}
+              className="flex w-48 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            >
+              Add new employee
+            </button>
+          </div>
           <Table dataSource={Data} columns={columns} pagination={false} />
           <Modal
             title="Edit Details"
