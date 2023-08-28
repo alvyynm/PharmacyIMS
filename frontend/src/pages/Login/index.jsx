@@ -1,6 +1,44 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 export default function index() {
+  const navigate = useNavigate();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [authenticated, setAuthenticated] = useState(
+    localStorage.getItem(localStorage.getItem('authenticated') || false)
+  );
+
+  const handleLogin = async (e) => {
+    e.preventDefault(); // Prevent the default form submission behavior
+
+    try {
+      const response = await axios.post('http://localhost:3001/auth/login', {
+        email: email,
+        password: password,
+      });
+
+      console.log(email, password);
+
+      console.log(response.data); // log api response to console
+
+      const token = response.data.token;
+      // Store the token in localStorage
+      localStorage.setItem('token', token);
+      localStorage.setItem('isAuthenticated', true);
+      localStorage.setItem('userId', response.data.userId);
+
+      setAuthenticated(true);
+
+      //redirect to dashboard page if authenticated
+      navigate('/dashboard');
+    } catch (error) {
+      console.error('Login failed');
+      console.log(response.data); // log api response to console
+    }
+  };
+
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
@@ -21,6 +59,8 @@ export default function index() {
                   id="email"
                   name="email"
                   type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   autoComplete="email"
                   required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -47,6 +87,8 @@ export default function index() {
                   id="password"
                   name="password"
                   type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   autoComplete="current-password"
                   required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -57,6 +99,7 @@ export default function index() {
             <div>
               <button
                 type="submit"
+                onClick={handleLogin}
                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
                 Sign in
