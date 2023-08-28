@@ -1,11 +1,60 @@
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../../context/AuthContext';
 // import { Navigate } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 export default function index() {
   const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
   const navigate = useNavigate();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const [role, setRole] = useState('ADMIN');
+
+  const notifyError = () => {
+    toast.error('Ooops! Please fill all required credentials', {
+      position: toast.POSITION.TOP_LEFT,
+    });
+  };
+
+  const notifySuccess = () => {
+    toast.success('Account created successfully', {
+      position: toast.POSITION.TOP_LEFT,
+    });
+  };
+
+  const handleSignup = async (e) => {
+    e.preventDefault(); // Prevent the default form submission behavior
+
+    if (email !== '' && password !== '' && name !== '') {
+      try {
+        const response = await axios.put('http://localhost:3001/auth/signup', {
+          email: email,
+          password: password,
+          role: role,
+          name: name,
+        });
+
+        console.log(email, password);
+
+        console.log(response.data); // log api response to console
+
+        const token = response.data.token;
+
+        //redirect to login page after successful a/c creation
+        navigate('/login');
+        notifySuccess();
+      } catch (error) {
+        console.error('Account creation failed');
+        console.log(response.data); // log api response to console
+      }
+    } else {
+      // display error message
+      notifyError();
+    }
+  };
 
   // check login status on page reload
 
@@ -41,6 +90,8 @@ export default function index() {
                   id="name"
                   name="name"
                   autoComplete="name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                   required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
@@ -74,6 +125,8 @@ export default function index() {
                   name="email"
                   type="email"
                   autoComplete="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
@@ -101,6 +154,8 @@ export default function index() {
                   type="password"
                   autoComplete="current-password"
                   required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
@@ -109,6 +164,7 @@ export default function index() {
             <div>
               <button
                 type="submit"
+                onClick={handleSignup}
                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
                 Sign in
