@@ -1,15 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { Navigate } from 'react-router-dom';
 import { employeeData } from '../../data/Employee';
 import { Table, Modal, Input } from 'antd';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import Navbar from '../../components/Navbar';
 import Topbar from '../../components/Topbar';
+import { AuthContext } from '../../context/AuthContext';
 
 function index() {
   const [Data, setData] = useState(employeeData);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [edit, setEdit] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
 
   const columns = [
     {
@@ -88,79 +91,82 @@ function index() {
     setEdit(null);
     setIsModalOpen(false);
   };
-
-  return (
-    <section className="relative">
-      <div className="grid grid-cols-6 grid-rows-1 gap-12">
-        {/* Fixes nav to the left avoid overscroll */}
-        <div className="h-screen sticky top-0">
-          <Navbar />
-        </div>
-        <main className="col-span-5">
-          {/* Positions topbar to be sticky at the top on scroll */}
-          <div className="sticky top-0 left-0 right-0 z-50 bg-white">
-            <Topbar />
+  if (!isLoggedIn) {
+    //redirect to login page if unauthenticated
+    return <Navigate replace to="/login" />;
+  } else {
+    return (
+      <section className="relative">
+        <div className="grid grid-cols-6 grid-rows-1 gap-12">
+          {/* Fixes nav to the left avoid overscroll */}
+          <div className="h-screen sticky top-0">
+            <Navbar />
           </div>
-          <h1 className="my-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-            Employee List
-          </h1>
-          <div className="flex justify-between mb-4">
-            <div>
-              <Input.Search
-                onSearch={(value) => {
-                  setSearchTerm(value);
-                }}
-                placeholder="Search for employee"
-                // style={{ borderRadius: '0.5rem', display: 'block' }}
-              />
+          <main className="col-span-5">
+            {/* Positions topbar to be sticky at the top on scroll */}
+            <div className="sticky top-0 left-0 right-0 z-50 bg-white">
+              <Topbar />
             </div>
-            <button
-              onClick={() => {
-                setIsAddModalOpen(true);
+            <h1 className="my-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+              Employee List
+            </h1>
+            <div className="flex justify-between mb-4">
+              <div>
+                <Input.Search
+                  onSearch={(value) => {
+                    setSearchTerm(value);
+                  }}
+                  placeholder="Search for employee"
+                  // style={{ borderRadius: '0.5rem', display: 'block' }}
+                />
+              </div>
+              <button
+                onClick={() => {
+                  setIsAddModalOpen(true);
+                }}
+                className="flex w-48 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              >
+                Add new employee
+              </button>
+            </div>
+            <Table dataSource={Data} columns={columns} pagination={false} />
+            <Modal
+              title="Edit Details"
+              open={isModalOpen}
+              okText="Save"
+              onCancel={() => ResetEditing()}
+              onOk={() => {
+                setData((pre) => {
+                  return pre.map((employee) => {
+                    if (employee.id === edit.id) {
+                      return edit;
+                    } else {
+                      return employee;
+                    }
+                  });
+                });
+                ResetEditing();
               }}
-              className="flex w-48 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
-              Add new employee
-            </button>
-          </div>
-          <Table dataSource={Data} columns={columns} pagination={false} />
-          <Modal
-            title="Edit Details"
-            open={isModalOpen}
-            okText="Save"
-            onCancel={() => ResetEditing()}
-            onOk={() => {
-              setData((pre) => {
-                return pre.map((employee) => {
-                  if (employee.id === edit.id) {
-                    return edit;
-                  } else {
-                    return employee;
-                  }
-                });
-              });
-              ResetEditing();
-            }}
-          >
-            <Input
-              value={edit?.name}
-              onChange={(e) => {
-                setEdit((pre) => {
-                  return { ...pre, name: e.target.value };
-                });
-              }}
-              className="mb-3 rounded-lg"
-            />
-            <Input
-              value={edit?.email}
-              onChange={(e) => {
-                setEdit((pre) => {
-                  return { ...pre, email: e.target.value };
-                });
-              }}
-              className="mb-3 rounded-lg"
-            />
-            {/* <Input
+              <Input
+                value={edit?.name}
+                onChange={(e) => {
+                  setEdit((pre) => {
+                    return { ...pre, name: e.target.value };
+                  });
+                }}
+                className="mb-3 rounded-lg"
+              />
+              <Input
+                value={edit?.email}
+                onChange={(e) => {
+                  setEdit((pre) => {
+                    return { ...pre, email: e.target.value };
+                  });
+                }}
+                className="mb-3 rounded-lg"
+              />
+              {/* <Input
               value={edit?.address}
               onChange={(e) => {
                 setEdit((pre) => {
@@ -169,29 +175,30 @@ function index() {
               }}
               className="mb-3 rounded-lg"
             /> */}
-            <Input
-              value={edit?.phone}
-              onChange={(e) => {
-                setEdit((pre) => {
-                  return { ...pre, phone: e.target.value };
-                });
-              }}
-              className="mb-3 rounded-lg"
-            />
-            <Input
-              value={edit?.role}
-              onChange={(e) => {
-                setEdit((pre) => {
-                  return { ...pre, role: e.target.value };
-                });
-              }}
-              className="mb-3 rounded-lg"
-            />
-          </Modal>
-        </main>
-      </div>
-    </section>
-  );
+              <Input
+                value={edit?.phone}
+                onChange={(e) => {
+                  setEdit((pre) => {
+                    return { ...pre, phone: e.target.value };
+                  });
+                }}
+                className="mb-3 rounded-lg"
+              />
+              <Input
+                value={edit?.role}
+                onChange={(e) => {
+                  setEdit((pre) => {
+                    return { ...pre, role: e.target.value };
+                  });
+                }}
+                className="mb-3 rounded-lg"
+              />
+            </Modal>
+          </main>
+        </div>
+      </section>
+    );
+  }
 }
 
 export default index;

@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { Navigate } from 'react-router-dom';
 import { data } from '../../data/Data';
 import { Table, Modal, Input } from 'antd';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import Navbar from '../../components/Navbar';
 import Topbar from '../../components/Topbar';
+import { AuthContext } from '../../context/AuthContext';
 
 function index() {
   const [Data, setData] = useState(data);
@@ -12,6 +14,7 @@ function index() {
   const [edit, setEdit] = useState(null);
   const [formData, setFormData] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
 
   const columns = [
     {
@@ -112,204 +115,208 @@ function index() {
     setIsAddModalOpen(false);
     setFormData(null);
   };
-
-  return (
-    <section className="relative">
-      <div className="grid grid-cols-6 grid-rows-1 gap-12">
-        {/* Fixes nav to the left avoid overscroll */}
-        <div className="h-screen sticky top-0">
-          <Navbar />
-        </div>
-        <main className="col-span-5">
-          {/* Positions topbar to be sticky at the top on scroll */}
-          <div className="sticky top-0 left-0 right-0 z-50 bg-white">
-            <Topbar />
+  if (!isLoggedIn) {
+    //redirect to login page if unauthenticated
+    return <Navigate replace to="/login" />;
+  } else {
+    return (
+      <section className="relative">
+        <div className="grid grid-cols-6 grid-rows-1 gap-12">
+          {/* Fixes nav to the left avoid overscroll */}
+          <div className="h-screen sticky top-0">
+            <Navbar />
           </div>
-          <h1 className="my-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-            List of drugs
-          </h1>
-          <div className="flex justify-between mb-4">
-            <div>
-              <Input.Search
-                onSearch={(value) => {
-                  setSearchTerm(value);
-                }}
-                placeholder="Search for drugs"
-                // style={{ borderRadius: '0.5rem', display: 'block' }}
-              />
+          <main className="col-span-5">
+            {/* Positions topbar to be sticky at the top on scroll */}
+            <div className="sticky top-0 left-0 right-0 z-50 bg-white">
+              <Topbar />
             </div>
-            <button
-              onClick={() => {
-                setIsAddModalOpen(true);
-              }}
-              className="flex w-48 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              Add new record
-            </button>
-          </div>
-          <Table
-            dataSource={Data}
-            columns={columns}
-            pagination={{ pageSize: 9, total: 50, showSizeChanger: false }}
-          />
+            <h1 className="my-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+              List of drugs
+            </h1>
+            <div className="flex justify-between mb-4">
+              <div>
+                <Input.Search
+                  onSearch={(value) => {
+                    setSearchTerm(value);
+                  }}
+                  placeholder="Search for drugs"
+                  // style={{ borderRadius: '0.5rem', display: 'block' }}
+                />
+              </div>
+              <button
+                onClick={() => {
+                  setIsAddModalOpen(true);
+                }}
+                className="flex w-48 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              >
+                Add new record
+              </button>
+            </div>
+            <Table
+              dataSource={Data}
+              columns={columns}
+              pagination={{ pageSize: 9, total: 50, showSizeChanger: false }}
+            />
 
-          {/* Edit record modal */}
-          <Modal
-            title="Edit Details"
-            open={isModalOpen}
-            okText="Save"
-            onCancel={() => ResetEditing()}
-            onOk={() => {
-              setData((pre) => {
-                return pre.map((student) => {
-                  if (student.id === edit.id) {
-                    return edit;
-                  } else {
-                    return student;
-                  }
+            {/* Edit record modal */}
+            <Modal
+              title="Edit Details"
+              open={isModalOpen}
+              okText="Save"
+              onCancel={() => ResetEditing()}
+              onOk={() => {
+                setData((pre) => {
+                  return pre.map((student) => {
+                    if (student.id === edit.id) {
+                      return edit;
+                    } else {
+                      return student;
+                    }
+                  });
                 });
-              });
-              ResetEditing();
-            }}
-          >
-            <label htmlFor="name">Name</label>
-            <Input
-              id="name"
-              value={edit?.name}
-              onChange={(e) => {
-                setEdit((pre) => {
-                  return { ...pre, name: e.target.value };
-                });
+                ResetEditing();
               }}
-              className="mb-3 rounded-lg"
-            />
-            <label htmlFor="email">Email</label>
-            <Input
-              id="email"
-              value={edit?.email}
-              onChange={(e) => {
-                setEdit((pre) => {
-                  return { ...pre, email: e.target.value };
-                });
-              }}
-              className="mb-3 rounded-lg"
-            />
-            <label htmlFor="address">Address</label>
-            <Input
-              id="address"
-              value={edit?.address}
-              onChange={(e) => {
-                setEdit((pre) => {
-                  return { ...pre, address: e.target.value };
-                });
-              }}
-              className="mb-3 rounded-lg"
-            />
-            <label htmlFor="phone">Phone</label>
-            <Input
-              id="phone"
-              value={edit?.phone}
-              onChange={(e) => {
-                setEdit((pre) => {
-                  return { ...pre, phone: e.target.value };
-                });
-              }}
-              className="mb-3 rounded-lg"
-            />
-            <label htmlFor="website">Website</label>
-            <Input
-              id="website"
-              value={edit?.website}
-              onChange={(e) => {
-                setEdit((pre) => {
-                  return { ...pre, website: e.target.value };
-                });
-              }}
-              className="mb-3 rounded-lg"
-            />
-          </Modal>
-
-          {/* Add record modal */}
-          <Modal
-            title="Add new record"
-            open={isAddModalOpen}
-            okText="Save record"
-            onCancel={() => onCancelAdd()}
-            onOk={() => {
-              onAddRecord();
-              onCancelAdd();
-            }}
-          >
-            <label htmlFor="name">Name</label>
-            <Input
-              id="name"
-              value={edit?.name}
-              onChange={(e) => {
-                setEdit((pre) => {
-                  return { ...pre, name: e.target.value };
-                });
-              }}
-              className="mb-3 rounded-lg"
-            />
-            <label htmlFor="email">Email</label>
-            <Input
-              id="email"
-              value={edit?.email}
-              onChange={(e) => {
-                setEdit((pre) => {
-                  return { ...pre, email: e.target.value };
-                });
-              }}
-              className="mb-3 rounded-lg"
-            />
-            <label htmlFor="address">Address</label>
-            <Input
-              id="address"
-              value={edit?.address}
-              onChange={(e) => {
-                setEdit((pre) => {
-                  return { ...pre, address: e.target.value };
-                });
-              }}
-              className="mb-3 rounded-lg"
-            />
-            <label htmlFor="phone">Phone</label>
-            <Input
-              id="phone"
-              value={edit?.phone}
-              onChange={(e) => {
-                setEdit((pre) => {
-                  return { ...pre, phone: e.target.value };
-                });
-              }}
-              className="mb-3 rounded-lg"
-            />
-            <label htmlFor="website">Website</label>
-            <Input
-              id="website"
-              value={edit?.website}
-              onChange={(e) => {
-                setEdit((pre) => {
-                  return { ...pre, website: e.target.value };
-                });
-              }}
-              className="mb-3 rounded-lg"
-            />
-          </Modal>
-          <div>
-            <button
-              onClick={() => {
-                setIsAddModalOpen(true);
-              }}
-              className="flex w-48 justify-center rounded-md mb-4 bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
-              Add new record
-            </button>
-          </div>
-        </main>
-      </div>
-    </section>
-  );
+              <label htmlFor="name">Name</label>
+              <Input
+                id="name"
+                value={edit?.name}
+                onChange={(e) => {
+                  setEdit((pre) => {
+                    return { ...pre, name: e.target.value };
+                  });
+                }}
+                className="mb-3 rounded-lg"
+              />
+              <label htmlFor="email">Email</label>
+              <Input
+                id="email"
+                value={edit?.email}
+                onChange={(e) => {
+                  setEdit((pre) => {
+                    return { ...pre, email: e.target.value };
+                  });
+                }}
+                className="mb-3 rounded-lg"
+              />
+              <label htmlFor="address">Address</label>
+              <Input
+                id="address"
+                value={edit?.address}
+                onChange={(e) => {
+                  setEdit((pre) => {
+                    return { ...pre, address: e.target.value };
+                  });
+                }}
+                className="mb-3 rounded-lg"
+              />
+              <label htmlFor="phone">Phone</label>
+              <Input
+                id="phone"
+                value={edit?.phone}
+                onChange={(e) => {
+                  setEdit((pre) => {
+                    return { ...pre, phone: e.target.value };
+                  });
+                }}
+                className="mb-3 rounded-lg"
+              />
+              <label htmlFor="website">Website</label>
+              <Input
+                id="website"
+                value={edit?.website}
+                onChange={(e) => {
+                  setEdit((pre) => {
+                    return { ...pre, website: e.target.value };
+                  });
+                }}
+                className="mb-3 rounded-lg"
+              />
+            </Modal>
+
+            {/* Add record modal */}
+            <Modal
+              title="Add new record"
+              open={isAddModalOpen}
+              okText="Save record"
+              onCancel={() => onCancelAdd()}
+              onOk={() => {
+                onAddRecord();
+                onCancelAdd();
+              }}
+            >
+              <label htmlFor="name">Name</label>
+              <Input
+                id="name"
+                value={edit?.name}
+                onChange={(e) => {
+                  setEdit((pre) => {
+                    return { ...pre, name: e.target.value };
+                  });
+                }}
+                className="mb-3 rounded-lg"
+              />
+              <label htmlFor="email">Email</label>
+              <Input
+                id="email"
+                value={edit?.email}
+                onChange={(e) => {
+                  setEdit((pre) => {
+                    return { ...pre, email: e.target.value };
+                  });
+                }}
+                className="mb-3 rounded-lg"
+              />
+              <label htmlFor="address">Address</label>
+              <Input
+                id="address"
+                value={edit?.address}
+                onChange={(e) => {
+                  setEdit((pre) => {
+                    return { ...pre, address: e.target.value };
+                  });
+                }}
+                className="mb-3 rounded-lg"
+              />
+              <label htmlFor="phone">Phone</label>
+              <Input
+                id="phone"
+                value={edit?.phone}
+                onChange={(e) => {
+                  setEdit((pre) => {
+                    return { ...pre, phone: e.target.value };
+                  });
+                }}
+                className="mb-3 rounded-lg"
+              />
+              <label htmlFor="website">Website</label>
+              <Input
+                id="website"
+                value={edit?.website}
+                onChange={(e) => {
+                  setEdit((pre) => {
+                    return { ...pre, website: e.target.value };
+                  });
+                }}
+                className="mb-3 rounded-lg"
+              />
+            </Modal>
+            <div>
+              <button
+                onClick={() => {
+                  setIsAddModalOpen(true);
+                }}
+                className="flex w-48 justify-center rounded-md mb-4 bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              >
+                Add new record
+              </button>
+            </div>
+          </main>
+        </div>
+      </section>
+    );
+  }
 }
 
 export default index;
