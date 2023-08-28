@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 export default function index() {
   const navigate = useNavigate();
@@ -10,32 +11,43 @@ export default function index() {
     localStorage.getItem(localStorage.getItem('authenticated') || false)
   );
 
+  const notify = () => {
+    toast.error('Ooops! No credentials provided', {
+      position: toast.POSITION.TOP_LEFT,
+    });
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault(); // Prevent the default form submission behavior
 
-    try {
-      const response = await axios.post('http://localhost:3001/auth/login', {
-        email: email,
-        password: password,
-      });
+    if (email !== '' && password !== '') {
+      try {
+        const response = await axios.post('http://localhost:3001/auth/login', {
+          email: email,
+          password: password,
+        });
 
-      console.log(email, password);
+        console.log(email, password);
 
-      console.log(response.data); // log api response to console
+        console.log(response.data); // log api response to console
 
-      const token = response.data.token;
-      // Store the token in localStorage
-      localStorage.setItem('token', token);
-      localStorage.setItem('isAuthenticated', true);
-      localStorage.setItem('userId', response.data.userId);
+        const token = response.data.token;
+        // Store the token in localStorage
+        localStorage.setItem('token', token);
+        localStorage.setItem('isAuthenticated', true);
+        localStorage.setItem('userId', response.data.userId);
 
-      setAuthenticated(true);
+        setAuthenticated(true);
 
-      //redirect to dashboard page if authenticated
-      navigate('/dashboard');
-    } catch (error) {
-      console.error('Login failed');
-      console.log(response.data); // log api response to console
+        //redirect to dashboard page if authenticated
+        navigate('/dashboard');
+      } catch (error) {
+        console.error('Login failed');
+        console.log(response.data); // log api response to console
+      }
+    } else {
+      // display error message
+      notify();
     }
   };
 
