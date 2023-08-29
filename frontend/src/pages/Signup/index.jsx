@@ -4,6 +4,7 @@ import { AuthContext } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { authValidator } from '../../utils/authVerify';
 
 export default function index() {
   const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
@@ -63,9 +64,8 @@ export default function index() {
   }, []);
 
   const checkLoginStatus = () => {
-    if (localStorage.getItem('token')) {
+    if (authValidator()) {
       setIsLoggedIn(true);
-      console.log('Logged in');
       navigate('/dashboard');
     }
   };
