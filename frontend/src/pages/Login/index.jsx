@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { AuthContext } from '../../context/AuthContext';
+import { UserContext } from '../../context/UserContext';
 import { authValidator } from '../../utils/authVerify';
 
 export default function index() {
@@ -11,6 +12,7 @@ export default function index() {
   const [password, setPassword] = useState('');
 
   const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
+  const { user, setUser } = useContext(UserContext);
 
   const notify = () => {
     toast.error('Ooops! No credentials provided', {
@@ -36,9 +38,11 @@ export default function index() {
         // Store the token in localStorage
         localStorage.setItem('token', token);
         localStorage.setItem('isAuthenticated', true);
-        localStorage.setItem('userId', response.data.userId);
+        localStorage.setItem('userId', response.data.userData.userId);
 
         setIsLoggedIn(true);
+
+        setUser(response.data.userData);
 
         //redirect to dashboard page if authenticated
         navigate('/dashboard');
