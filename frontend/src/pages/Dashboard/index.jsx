@@ -157,6 +157,7 @@ function index() {
               dataSource={Data}
               columns={columns}
               pagination={{ pageSize: 9, total: 50, showSizeChanger: false }}
+              rowKey={(record) => record.id}
             />
 
             {/* Edit record modal */}
