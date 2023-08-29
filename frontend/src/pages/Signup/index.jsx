@@ -12,7 +12,7 @@ export default function index() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
-  const [role, setRole] = useState('ADMIN');
+  const [role, setRole] = useState('');
 
   const notifyError = () => {
     toast.error('Ooops! Please fill all required credentials', {
@@ -24,6 +24,10 @@ export default function index() {
     toast.success('Account created successfully', {
       position: toast.POSITION.TOP_LEFT,
     });
+  };
+
+  const handleRoleChange = (e) => {
+    setRole(e.target.value);
   };
 
   const handleSignup = async (e) => {
@@ -100,16 +104,18 @@ export default function index() {
 
             <div>
               <label
-                for="countries"
+                for="role"
                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400"
               >
                 Select your role
               </label>
               <select
-                id="countries"
+                id="role"
+                value={role}
+                onChange={handleRoleChange}
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               >
-                <option selected>Choose a role</option>
+                <option value="">Choose a role</option>
                 <option value="ADMIN">ADMIN</option>
                 <option value="USER">USER</option>
               </select>
