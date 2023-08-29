@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { AuthContext } from '../../context/AuthContext';
 import { Link } from 'react-router-dom';
 import motivLogo from '../../assets/logo.svg';
 
@@ -11,6 +12,18 @@ import settingsIcon from '../../assets/icons/setting.svg';
 import logoutIcon from '../../assets/icons/logout.svg';
 
 export default function index() {
+  const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem('userId');
+    setIsLoggedIn(false);
+
+    //redirect to login page
+    navigate('/login');
+  };
+
   return (
     <aside className="w-[248px] h-[100vh] bg-white">
       <div className="w-[200px] h-[100vh] py-8 pl-6">
@@ -68,13 +81,13 @@ export default function index() {
               </Link>
             </li>
             <li>
-              <Link
-                to="/login"
+              <button
+                onClick={handleLogout}
                 className="flex justify-start gap-3 px-6 py-3 hover:bg-custom-white text-light-gray rounded"
               >
                 <img src={logoutIcon} alt="log out icon" />
                 Log out
-              </Link>
+              </button>
             </li>
           </ul>
         </nav>
