@@ -99,9 +99,27 @@ function index() {
       okType: 'danger',
       cancelText: 'No',
       onOk: () => {
-        setData((pre) => {
-          return pre.filter((person) => person.id != record.id);
-        });
+        setLoading(true);
+
+        axios
+          .delete(`http://localhost:3001/v1/product/${record._id}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
+          .then((response) => {
+            setLoading(false);
+            console.log(`${response.message}`);
+            // Filter data in UI to remove deleted item before fetching from database again
+            setInventory((pre) => {
+              return pre.filter((item) => item._id != record._id);
+            });
+          })
+          .catch((error) => {
+            setLoading(false);
+            setError(error);
+            console.error('Error deleting record:', error);
+          });
       },
     });
   };
