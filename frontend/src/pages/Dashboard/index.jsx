@@ -299,11 +299,11 @@ function index() {
                 onCancel={() => ResetEditing()}
                 onOk={() => {
                   setData((pre) => {
-                    return pre.map((student) => {
-                      if (student.id === edit.id) {
+                    return pre.map((record) => {
+                      if (record.id === edit.id) {
                         return edit;
                       } else {
-                        return student;
+                        return record;
                       }
                     });
                   });
