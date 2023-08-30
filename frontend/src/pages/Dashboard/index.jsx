@@ -4,6 +4,7 @@ import { data } from '../../data/Data';
 import { Table, Modal, Input } from 'antd';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 import Navbar from '../../components/Navbar';
 import Topbar from '../../components/Topbar';
 import { AuthContext } from '../../context/AuthContext';
@@ -109,15 +110,17 @@ function index() {
           })
           .then((response) => {
             setLoading(false);
-            console.log(`${response.message}`);
+            console.log(`${response.data.message}`);
             // Filter data in UI to remove deleted item before fetching from database again
             setInventory((pre) => {
               return pre.filter((item) => item._id != record._id);
             });
+            notifySuccess();
           })
           .catch((error) => {
             setLoading(false);
             setError(error);
+            notifyError();
             console.error('Error deleting record:', error);
           });
       },
@@ -159,6 +162,20 @@ function index() {
     setIsAddModalOpen(false);
     setFormData(null);
   };
+
+  // Toast helper functions for notifications
+  const notifySuccess = () => {
+    toast.success('Product deleted successfully', {
+      position: toast.POSITION.TOP_CENTER,
+    });
+  };
+
+  const notifyError = () => {
+    toast.error('Ooops! An error occured, try again later', {
+      position: toast.POSITION.TOP_CENTER,
+    });
+  };
+
   if (!isLoggedIn) {
     //redirect to login page if unauthenticated
     return <Navigate replace to="/login" />;
