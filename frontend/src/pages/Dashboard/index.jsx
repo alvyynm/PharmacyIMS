@@ -129,6 +129,42 @@ function index() {
   };
 
   // Edit records
+
+  const handleUpdate = async (record) => {
+    const updatedRecord = {
+      name: record.name,
+      price: record.unitPrice,
+      category: record.category,
+      quantity: record.quantityInStock,
+      shelfNumber: record.shelfNumber,
+      expiryDate: record.expiryDate,
+    };
+    console.log('Record', updatedRecord);
+    try {
+      axios
+        .put(`http://localhost:3001/v1/product/${record._id}`, updatedRecord, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        })
+        .then((response) => {
+          notifyUpdateSuccess(); // #TODO: create custom success message
+          console.log('Post updated successfully:', response);
+        })
+        .catch((error) => {
+          setIsModalOpen(false);
+          setError('An error occurred while creating the post');
+          console.error('Error creating post:', error);
+          notifyError();
+        });
+      // console.log('Edit Record');
+    } catch (error) {
+      console.error('Error updating record:', error);
+      notifyError();
+    }
+  };
+
   const Edit = (record) => {
     setIsModalOpen(true);
     setEdit({ ...record });
@@ -208,6 +244,12 @@ function index() {
 
   const notifyCreateSuccess = () => {
     toast.success('Product created successfully', {
+      position: toast.POSITION.TOP_CENTER,
+    });
+  };
+
+  const notifyUpdateSuccess = () => {
+    toast.success('Product updated successfully', {
       position: toast.POSITION.TOP_CENTER,
     });
   };
@@ -334,9 +376,12 @@ function index() {
                 okText="Save"
                 onCancel={() => ResetEditing()}
                 onOk={() => {
-                  setData((pre) => {
+                  setInventory((pre) => {
                     return pre.map((record) => {
-                      if (record.id === edit.id) {
+                      if (record._id === edit._id) {
+                        console.log(record);
+                        // call the api and update the record
+                        handleUpdate(edit);
                         return edit;
                       } else {
                         return record;
