@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Navigate } from 'react-router-dom';
 import { data } from '../../data/Data';
-import { Table, Modal, Input } from 'antd';
+import { Table, Modal, Input, Button, Form } from 'antd';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -21,6 +21,7 @@ function index() {
   const [error, setError] = useState(null);
   const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
   const { inventory, setInventory } = useContext(DataContext);
+  const [modalLoading, setModalLoading] = useState(false);
 
   // Retrieve the token from local storage
   const token = localStorage.getItem('token');
@@ -140,21 +141,50 @@ function index() {
   };
 
   // Create new record
+  const [form] = Form.useForm();
 
-  const onAddRecord = (record) => {
-    const randomNumber = parseInt(Math.random() * 1000);
-    const newRecord = {
-      id: randomNumber,
-      name: `name`,
-      email: `email`,
-      address: `address`,
-      phone: 123 - 456 - 789,
-      website: `website`,
-    };
-    console.log(newRecord);
-    setData((pre) => {
-      return [...pre, newRecord];
-    });
+  const onAddRecord = async () => {
+    try {
+      const record = await form.validateFields();
+
+      // Process the submitted data
+      const newRecord = {
+        name: record.name,
+        price: record.unitPrice,
+        category: record.category,
+        quantity: record.quantityInStock,
+        shelfNumber: record.shelfNumber,
+        expiryDate: record.expiryDate,
+      };
+      console.log(newRecord);
+      setModalLoading(true);
+
+      axios
+        .post('http://localhost:3001/v1/post', newRecord, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        })
+        .then((response) => {
+          setIsAddModalOpen(false);
+          notifyCreateSuccess();
+          console.log('Post created successfully:', response.data);
+          form.resetFields();
+          // Update inventory context
+          setInventory((present) => {
+            return [...present, newRecord];
+          });
+        })
+        .catch((error) => {
+          setIsAddModalOpen(false);
+          setError('An error occurred while creating the post');
+          console.error('Error creating post:', error);
+        });
+    } catch (error) {
+      notifyError();
+      console.error('Form validation error:', error);
+    }
   };
 
   // Discard new record
@@ -172,6 +202,12 @@ function index() {
 
   const notifyError = () => {
     toast.error('Ooops! An error occured, try again later', {
+      position: toast.POSITION.TOP_CENTER,
+    });
+  };
+
+  const notifyCreateSuccess = () => {
+    toast.success('Product created successfully', {
       position: toast.POSITION.TOP_CENTER,
     });
   };
@@ -377,62 +413,43 @@ function index() {
                   onAddRecord();
                   onCancelAdd();
                 }}
+                footer={[
+                  <Button key="cancel" onClick={onCancelAdd}>
+                    Cancel
+                  </Button>,
+                  <Button key="submit" type="primary" loading={modalLoading} onClick={onAddRecord}>
+                    Submit
+                  </Button>,
+                ]}
               >
-                <label htmlFor="name">Name</label>
-                <Input
-                  id="name"
-                  value={edit?.name}
-                  onChange={(e) => {
-                    setEdit((pre) => {
-                      return { ...pre, name: e.target.value };
-                    });
-                  }}
-                  className="mb-3 rounded-lg"
-                />
-                <label htmlFor="category">Category</label>
-                <Input
-                  id="category"
-                  value={edit?.category}
-                  onChange={(e) => {
-                    setEdit((pre) => {
-                      return { ...pre, category: e.target.value };
-                    });
-                  }}
-                  className="mb-3 rounded-lg"
-                />
-                <label htmlFor="unitPrice">Unit Price</label>
-                <Input
-                  id="unitPrice"
-                  value={edit?.unitPrice}
-                  onChange={(e) => {
-                    setEdit((pre) => {
-                      return { ...pre, unitPrice: e.target.value };
-                    });
-                  }}
-                  className="mb-3 rounded-lg"
-                />
-                <label htmlFor="quantityInStock">Quantity In Stock</label>
-                <Input
-                  id="quantityInStock"
-                  value={edit?.quantityInStock}
-                  onChange={(e) => {
-                    setEdit((pre) => {
-                      return { ...pre, quantityInStock: e.target.value };
-                    });
-                  }}
-                  className="mb-3 rounded-lg"
-                />
-                <label htmlFor="shelfNumber">Shelf Number</label>
-                <Input
-                  id="shelfNumber"
-                  value={edit?.shelfNumber}
-                  onChange={(e) => {
-                    setEdit((pre) => {
-                      return { ...pre, shelfNumber: e.target.value };
-                    });
-                  }}
-                  className="mb-3 rounded-lg"
-                />
+                <Form form={form}>
+                  <Form.Item name="name" label="Name" rules={[{ required: true }]}>
+                    <Input />
+                  </Form.Item>
+                  <Form.Item name="category" label="Category" rules={[{ required: true }]}>
+                    <Input />
+                  </Form.Item>
+                  <Form.Item name="unitPrice" label="Unit Price" rules={[{ required: true }]}>
+                    <Input />
+                  </Form.Item>
+                  <Form.Item
+                    name="quantityInStock"
+                    label="Quantity In Stock"
+                    rules={[{ required: true }]}
+                  >
+                    <Input />
+                  </Form.Item>
+                  <Form.Item name="shelfNumber" label="Shelf Number" rules={[{ required: true }]}>
+                    <Input />
+                  </Form.Item>
+                  <Form.Item
+                    name="expiryDate"
+                    label="Expiry Date: Format MMYY e.g: 102025"
+                    rules={[{ required: true }]}
+                  >
+                    <Input />
+                  </Form.Item>
+                </Form>
               </Modal>
               <div>
                 <button
