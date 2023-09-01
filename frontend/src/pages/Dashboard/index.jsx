@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import { Navigate } from 'react-router-dom';
 import { data } from '../../data/Data';
 import { Table, Modal, Input, Button, Form } from 'antd';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { useReactToPrint } from 'react-to-print';
 import Navbar from '../../components/Navbar';
 import Topbar from '../../components/Topbar';
 import { AuthContext } from '../../context/AuthContext';
@@ -254,6 +255,13 @@ function index() {
     });
   };
 
+  // DATA PRINTING FUNCTIONS --------------------------------
+
+  const componentRef = useRef();
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
+
   if (!isLoggedIn) {
     //redirect to login page if unauthenticated
     return <Navigate replace to="/login" />;
@@ -362,12 +370,24 @@ function index() {
                   Add new record
                 </button>
               </div>
-              <Table
-                dataSource={inventory}
-                columns={columns}
-                pagination={{ pageSize: 9, total: 50, showSizeChanger: false }}
-                rowKey={(record) => record._id}
-              />
+
+              <div ref={componentRef}>
+                <Table
+                  dataSource={inventory}
+                  columns={columns}
+                  pagination={{ pageSize: 9, total: 50, showSizeChanger: false }}
+                  rowKey={(record) => record._id}
+                />
+              </div>
+              <button
+                onClick={() => {
+                  console.log('printed pdf');
+                  handlePrint();
+                }}
+                className="flex w-48 my-5 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              >
+                Generate report
+              </button>
 
               {/* Edit record modal */}
               <Modal
