@@ -70,8 +70,8 @@ function index() {
       key: 'quantityInStock',
       title: 'Quantity',
       dataIndex: 'quantityInStock',
-      sorter: (a, b) => a.quantityInStock > b.quantityInStock,
-      sortDirections: ['descend'],
+      sorter: (a, b) => a.quantityInStock - b.quantityInStock,
+      defaultSortOrder: 'descend',
     },
     {
       key: 'shelfNumber',
