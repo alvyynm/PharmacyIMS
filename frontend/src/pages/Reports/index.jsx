@@ -1,11 +1,13 @@
 import React, { useContext } from 'react';
 import { AuthContext } from '../../context/AuthContext';
+import { DataContext } from '../../context/DataContext';
 import { Navigate } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
 import Topbar from '../../components/Topbar';
 
 function index() {
   const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
+  const { inventory, setInventory } = useContext(DataContext);
 
   if (!isLoggedIn) {
     //redirect to login page if unauthenticated
