@@ -75,6 +75,11 @@ function index() {
       defaultSortOrder: 'descend',
     },
     {
+      key: 'expiryDate',
+      title: 'Expiry Date',
+      dataIndex: 'expiryDate',
+    },
+    {
       key: 'shelfNumber',
       title: 'Shelf No.',
       dataIndex: 'shelfNumber',
