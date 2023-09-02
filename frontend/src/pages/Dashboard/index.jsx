@@ -24,6 +24,7 @@ function index() {
   const { inventory, setInventory } = useContext(DataContext);
   const [modalLoading, setModalLoading] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState(null);
+  const [selectedOrderDate, setSelectedOrderDate] = useState(null);
 
   // Retrieve the token from local storage
   const token = localStorage.getItem('token');
@@ -206,6 +207,7 @@ function index() {
         category: record.category,
         quantity: record.quantityInStock,
         shelfNumber: record.shelfNumber,
+        orderDate: record.orderDate.$d.toISOString(),
         expiryDate: record.expiryDate.$d.toISOString(),
       };
       console.log(newRecord);
@@ -521,6 +523,17 @@ function index() {
                   </Form.Item>
                   <Form.Item name="shelfNumber" label="Shelf Number" rules={[{ required: true }]}>
                     <Input />
+                  </Form.Item>
+                  <Form.Item name="orderDate" label="Order Date" rules={[{ required: true }]}>
+                    <DatePicker
+                      picker="date"
+                      onChange={(date, dateString) => {
+                        console.log(dateString);
+                        const dateT = date.$d.toISOString();
+                        console.log(`Order date: `, dateT);
+                      }}
+                    />
+                    {selectedOrderDate && <p>Selected Date: {selectedOrderDate}</p>}
                   </Form.Item>
                   <Form.Item name="expiryDate" label="Expiry Date" rules={[{ required: true }]}>
                     <DatePicker
