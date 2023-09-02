@@ -6,6 +6,7 @@ import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useReactToPrint } from 'react-to-print';
+import moment from 'moment';
 import Navbar from '../../components/Navbar';
 import Topbar from '../../components/Topbar';
 import { AuthContext } from '../../context/AuthContext';
@@ -77,9 +78,16 @@ function index() {
       defaultSortOrder: 'descend',
     },
     {
+      key: 'orderDate',
+      title: 'Order Date',
+      dataIndex: 'orderDate',
+      render: (text) => moment(text).format('DD/MM/YY'), // Format the ISO date string
+    },
+    {
       key: 'expiryDate',
       title: 'Expiry Date',
       dataIndex: 'expiryDate',
+      render: (text) => moment(text).format('DD/MM/YY'), // Format the ISO date string
       defaultSortOrder: 'descend',
       sorter: (a, b) => a.expiryDate - b.expiryDate,
     },
