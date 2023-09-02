@@ -23,8 +23,12 @@ const productSchema = new Schema({
     type: String,
     required: true,
   },
+  orderDate: {
+    type: Date,
+    required: true,
+  },
   expiryDate: {
-    type: Number,
+    type: Date,
     required: true,
   },
 });
