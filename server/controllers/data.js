@@ -31,6 +31,7 @@ exports.createProduct = (req, res, next) => {
   const category = req.body.category;
   const quantity = req.body.quantity;
   const shelfNumber = req.body.shelfNumber;
+  const orderDate = req.body.orderDate;
   const expiryDate = req.body.expiryDate;
 
   // Create product in db
@@ -40,6 +41,7 @@ exports.createProduct = (req, res, next) => {
     category: category,
     quantityInStock: quantity,
     shelfNumber: shelfNumber,
+    orderDate: orderDate,
     expiryDate: expiryDate,
   });
 
