@@ -89,7 +89,7 @@ function index() {
       dataIndex: 'expiryDate',
       render: (text) => moment(text).format('DD/MM/YY'), // Format the ISO date string
       defaultSortOrder: 'descend',
-      sorter: (a, b) => a.expiryDate - b.expiryDate,
+      sorter: (a, b) => moment(a.expiryDate).unix() - moment(b.expiryDate).unix(), // Custom sorting function
     },
     {
       key: 'shelfNumber',
