@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { Navigate } from 'react-router-dom';
 import { data } from '../../data/Data';
-import { Table, Modal, Input, Button, Form } from 'antd';
+import { Table, Modal, Input, Button, Form, DatePicker } from 'antd';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -23,6 +23,7 @@ function index() {
   const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
   const { inventory, setInventory } = useContext(DataContext);
   const [modalLoading, setModalLoading] = useState(false);
+  const [selectedMonth, setSelectedMonth] = useState(null);
 
   // Retrieve the token from local storage
   const token = localStorage.getItem('token');
@@ -78,6 +79,8 @@ function index() {
       key: 'expiryDate',
       title: 'Expiry Date',
       dataIndex: 'expiryDate',
+      defaultSortOrder: 'descend',
+      sorter: (a, b) => a.expiryDate - b.expiryDate,
     },
     {
       key: 'shelfNumber',
@@ -185,9 +188,16 @@ function index() {
   // Create new record
   const [form] = Form.useForm();
 
+  // Function to disable past dates
+  const disabledDate = (current) => {
+    // Disable dates before today (past dates)
+    return current && current < new Date().setHours(0, 0, 0, 0);
+  };
+
   const onAddRecord = async () => {
     try {
       const record = await form.validateFields();
+      //  #TODO: Add specific validation parameters
 
       // Process the submitted data
       const newRecord = {
@@ -196,7 +206,7 @@ function index() {
         category: record.category,
         quantity: record.quantityInStock,
         shelfNumber: record.shelfNumber,
-        expiryDate: record.expiryDate,
+        expiryDate: record.expiryDate.$d.toISOString(),
       };
       console.log(newRecord);
       setModalLoading(true);
@@ -512,12 +522,17 @@ function index() {
                   <Form.Item name="shelfNumber" label="Shelf Number" rules={[{ required: true }]}>
                     <Input />
                   </Form.Item>
-                  <Form.Item
-                    name="expiryDate"
-                    label="Expiry Date: Format MMYY e.g: 102025"
-                    rules={[{ required: true }]}
-                  >
-                    <Input />
+                  <Form.Item name="expiryDate" label="Expiry Date" rules={[{ required: true }]}>
+                    <DatePicker
+                      picker="date"
+                      disabledDate={disabledDate}
+                      onChange={(date, dateString) => {
+                        console.log(dateString);
+                        const dateT = date.$d.toISOString();
+                        console.log(dateT);
+                      }}
+                    />
+                    {selectedMonth && <p>Selected Month: {selectedMonth}</p>}
                   </Form.Item>
                 </Form>
               </Modal>
