@@ -75,7 +75,6 @@ function index() {
       title: 'Quantity',
       dataIndex: 'quantityInStock',
       sorter: (a, b) => a.quantityInStock - b.quantityInStock,
-      defaultSortOrder: 'descend',
     },
     {
       key: 'orderDate',
