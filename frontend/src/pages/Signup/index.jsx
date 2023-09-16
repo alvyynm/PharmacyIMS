@@ -10,10 +10,6 @@ import { authValidator } from '../../utils/authVerify';
 export default function index() {
   const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
-  const [role, setRole] = useState('');
 
   const {
     register,
@@ -31,10 +27,6 @@ export default function index() {
     toast.success('Account created successfully', {
       position: toast.POSITION.TOP_LEFT,
     });
-  };
-
-  const handleRoleChange = (e) => {
-    setRole(e.target.value);
   };
 
   const onSubmit = async (data) => {
