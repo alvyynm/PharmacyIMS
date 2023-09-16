@@ -1,6 +1,6 @@
 import React, { useState, useContext, useRef } from 'react';
 import { Navigate } from 'react-router-dom';
-import { Table, Button, DatePicker } from 'antd';
+import { Table, Button, DatePicker, Input } from 'antd';
 import moment from 'moment';
 import Navbar from '../../components/Navbar';
 import Topbar from '../../components/Topbar';
@@ -16,6 +16,9 @@ function index() {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [filteredData, setFilteredData] = useState(inventory);
+
+  const [filteredQData, setFilteredQData] = useState(inventory);
+  const [filterValue, setFilterValue] = useState('');
 
   const handleDateFilter = () => {
     const filteredResult = inventory.filter((item) => {
@@ -34,6 +37,24 @@ function index() {
     setEndDate(null);
     setFilteredData(inventory);
   };
+
+  // Quantity filter
+  const handleFilter = () => {
+    console.log('method running', filterValue);
+    const filteredResult = inventory.filter((record) => {
+      if (record.quantityInStock < parseFloat(filterValue)) {
+        return record;
+      }
+    });
+    setFilteredData(filteredResult);
+  };
+
+  const clearFilter = () => {
+    setFilterValue('');
+    setFilteredData(inventory);
+  };
+
+  // END OF QUANTITY FILTER
 
   const componentRef = useRef();
   const handlePrint = useReactToPrint({
@@ -61,6 +82,31 @@ function index() {
       title: 'Quantity',
       dataIndex: 'quantityInStock',
       sorter: (a, b) => a.quantityInStock - b.quantityInStock,
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+        <div style={{ padding: 8 }}>
+          <Input
+            placeholder="Enter a number"
+            value={filterValue} // Set the input value to filterValue
+            onChange={(e) => setFilterValue(e.target.value)} // Update filterValue on input change
+            onPressEnter={() => handleFilter()}
+          />
+          <Button
+            type="primary"
+            onClick={() => handleFilter()}
+            icon={<i className="fas fa-filter" />}
+          >
+            Filter
+          </Button>
+          <Button onClick={() => clearFilter()}>Reset</Button>
+        </div>
+      ),
+      filterIcon: (filtered) => (
+        <i className="fas fa-filter" style={{ color: filtered ? '#1890ff' : undefined }} />
+      ),
+      onFilter: (value, record) => {
+        console.log(record.value);
+        return record.value > parseFloat(value);
+      },
     },
     {
       key: 'orderDate',
