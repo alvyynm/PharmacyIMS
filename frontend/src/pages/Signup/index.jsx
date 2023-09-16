@@ -91,9 +91,6 @@ export default function index() {
                   id="name"
                   name="name"
                   autoComplete="name"
-                  // value={name}
-                  // onChange={(e) => setName(e.target.value)}
-                  // required
                   {...register('name', {
                     required: true,
                     validate: {
@@ -123,8 +120,6 @@ export default function index() {
               </label>
               <select
                 id="role"
-                // value={role}
-                // onChange={handleRoleChange}
                 {...register('role', {
                   required: true,
                 })}
@@ -149,9 +144,6 @@ export default function index() {
                   name="email"
                   type="email"
                   autoComplete="email"
-                  // value={email}
-                  // onChange={(e) => setEmail(e.target.value)}
-                  // required
                   {...register('email', {
                     required: 'Email is required',
                     validate: {
@@ -202,9 +194,6 @@ export default function index() {
                         'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character',
                     },
                   })}
-                  // required
-                  // value={password}
-                  // onChange={(e) => setPassword(e.target.value)}
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
                 {errors.password?.message && (
@@ -216,7 +205,6 @@ export default function index() {
             <div>
               <button
                 type="submit"
-                // onClick={handleSignup}
                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
                 Sign in
