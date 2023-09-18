@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { AuthContext } from '../../context/AuthContext';
 import { Link } from 'react-router-dom';
-import motivLogo from '../../assets/logo.svg';
+import logo from '../../assets/logo.png';
 
 // Dashboard icons
 import dashboardIcon from '../../assets/icons/dashboard.svg';
@@ -29,7 +29,7 @@ export default function index() {
       <div className="w-[200px] h-[100vh] py-8 pl-6">
         <header className="mb-8">
           <a href="/dashboard">
-            <img src={motivLogo} alt="Motiv company logo" className="w-[140px]" />
+            <img src={logo} alt="Motiv company logo" className="w-[40px]" />
           </a>
         </header>
         <nav className="flex flex-col justify-between h-[85vh]">
@@ -60,7 +60,7 @@ export default function index() {
                 Reports
               </Link>
             </li>
-            <li>
+            {/* <li>
               <Link
                 to="/message"
                 className="flex justify-start gap-3 px-6 py-3 hover:bg-custom-white text-light-gray rounded"
@@ -68,7 +68,7 @@ export default function index() {
                 <img src={messagesIcon} alt="" />
                 Messages
               </Link>
-            </li>
+            </li> */}
           </ul>
           <ul className="flex flex-col gap-2">
             <li>
