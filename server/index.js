@@ -9,6 +9,10 @@ const uri = process.env.MONGODB_URI;
 const authRoutes = require("./routes/auth");
 const productRoutes = require("./routes/data");
 
+// import query service
+
+const queryService = require("./services/queryservice.js");
+
 const app = express();
 
 // Disable the "X-Powered-By" header
@@ -52,6 +56,8 @@ mongoose
     app.listen(port, () => {
       //   logger.info(`Server started on port ${port}`);
       console.log(`Server running at http://localhost:${port}`);
+      // Execute code from queryservice.js
+      queryService.startScheduledTask();
     });
   })
   .catch((error) => {
