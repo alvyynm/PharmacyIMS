@@ -3,6 +3,11 @@ const { validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
+const {
+  resetPassword,
+  requestPasswordReset,
+} = require("../services/passwordreset");
+
 const secret = process.env.MY_SECRET_KEY;
 
 const User = require("../models/user");
@@ -120,4 +125,38 @@ exports.logout = async (req, res) => {
   return res
     .status(200)
     .json({ success: true, msg: "User successfully logged out" });
+};
+
+exports.resetPasswordRequestController = async (req, res, next) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    const error = new Error("Invalid credentials");
+    error.statusCode = 422;
+    error.data = errors.array();
+    throw error;
+  }
+  const requestPasswordResetService = await requestPasswordReset(
+    res,
+    req.body.email
+  );
+  return res.json(requestPasswordResetService);
+};
+
+exports.resetPasswordController = async (req, res, next) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    const error = new Error("Invalid credentials");
+    error.statusCode = 422;
+    error.data = errors.array();
+    throw error;
+  }
+  const resetPasswordService = await resetPassword(
+    res,
+    req.body.userId,
+    req.body.resetToken,
+    req.body.password
+  );
+  return res.json(resetPasswordService);
 };

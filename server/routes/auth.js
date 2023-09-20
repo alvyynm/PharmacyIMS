@@ -57,4 +57,41 @@ router.post(
 // POST /auth/logout
 router.post("/logout", authController.logout);
 
+// POST /auth/requestResetPassword
+router.post(
+  "/requestResetPassword",
+  [
+    body("email")
+      .trim()
+      .not()
+      .isEmpty()
+      .withMessage("Email is required")
+      .isEmail()
+      .withMessage("Enter a valid email")
+      .normalizeEmail({ gmail_remove_dots: false }),
+  ],
+  authController.resetPasswordRequestController
+);
+
+// POST /auth/resetPassword
+router.post(
+  "/resetPassword",
+  [
+    body("password")
+      .trim()
+      .not()
+      .isEmpty()
+      .withMessage("Password is required")
+      .isLength({ min: 8 })
+      .withMessage("Password must be at least 8 characters long")
+      .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{8,}$/)
+      .withMessage(
+        "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
+      ),
+    body("resetToken").trim().not().isEmpty(),
+    body("userId").trim().not().isEmpty(),
+  ],
+  authController.resetPasswordController
+);
+
 module.exports = router;
