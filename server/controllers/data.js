@@ -1,6 +1,7 @@
 const { validationResult } = require("express-validator");
 const Inventory = require("../models/inventory");
 const User = require("../models/user");
+const Archive = require("../models/archive");
 
 exports.getProducts = (req, res, next) => {
   Inventory.find()
@@ -134,9 +135,21 @@ exports.deleteProduct = (req, res, next) => {
       //     error.statusCode = 403;
       //     throw error;
       //   }
+      const archiveDocument = new Archive({
+        // Copy relevant fields from the original document
+        archiveData: product,
+        creator: "Kelvin", // #TODO: send user info from the frontend
+      });
 
-      return Inventory.findByIdAndRemove(productId);
+      return archiveDocument.save();
     })
+    .then(
+      // if product is archived delete it from inventory db
+      (result) => {
+        console.log(result);
+        return Inventory.findByIdAndRemove(productId);
+      }
+    )
     .then((result) => {
       console.log(result);
       res.status(200).json({ message: "Product deleted successfully" });
