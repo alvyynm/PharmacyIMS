@@ -51,20 +51,20 @@ async function sendEmail(products) {
   }
 }
 
-// Schedule the task to run every Monday at 9 AM
-// cron.schedule("0 9 * * 1", async () => {
-//   console.log("Running task...");
-
-//   const products = await getProductsWithinDateRange();
-
-//   if (products.length > 0) {
-//     await sendEmail(products);
-//   }
-// });
-
 function startScheduledTask() {
   // Schedule the task to run every 3 minutes
-  cron.schedule("*/3 * * * *", async () => {
+  // cron.schedule("*/3 * * * *", async () => {
+  //   console.log("Running task...");
+
+  //   const products = await getProductsWithinDateRange();
+
+  //   if (products.length > 0) {
+  //     await sendEmail(products);
+  //   }
+  // });
+
+  // Schedule the task to run every Monday at 9 AM
+  cron.schedule("0 9 * * 1", async () => {
     console.log("Running task...");
 
     const products = await getProductsWithinDateRange();
