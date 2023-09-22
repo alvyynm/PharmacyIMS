@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthContext } from './context/AuthContext';
 import { UserContext } from './context/UserContext';
 import { DataContext } from './context/DataContext';
+import { ArchiveContext } from './context/ArchiveContext';
 
 import './App.css';
 import '@tremor/react/dist/esm/tremor.css';
@@ -24,34 +25,37 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
   const [inventory, setInventory] = useState(null);
+  const [archive, setArchive] = useState(null);
 
   return (
     <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn }}>
       <UserContext.Provider value={{ user, setUser }}>
         <DataContext.Provider value={{ inventory, setInventory }}>
-          <BrowserRouter>
-            <ToastContainer />
-            <Routes>
-              <Route path="/" element={<Login />}></Route>
-              <Route
-                path="/login"
-                element={
-                  <div className="font-primary">
-                    <Login />
-                  </div>
-                }
-              ></Route>
-              <Route path="/dashboard" element={<Dashboard />}></Route>
-              <Route path="/settings" element={<Settings />}></Route>
-              <Route path="/signup" element={<Signup />}></Route>
-              <Route path="/reports" element={<Reports />}></Route>
-              <Route path="/admin" element={<Admin />}></Route>
-              <Route path="/archive" element={<Archive />}></Route>
-              <Route path="/requestpasswordreset" element={<PasswordResetRequest />}></Route>
-              <Route path="passwordresetemail" element={<ResetEmailSend />}></Route>
-              <Route path="passwordReset" element={<PasswordReset />}></Route>
-            </Routes>
-          </BrowserRouter>
+          <ArchiveContext.Provider value={{ archive, setArchive }}>
+            <BrowserRouter>
+              <ToastContainer />
+              <Routes>
+                <Route path="/" element={<Login />}></Route>
+                <Route
+                  path="/login"
+                  element={
+                    <div className="font-primary">
+                      <Login />
+                    </div>
+                  }
+                ></Route>
+                <Route path="/dashboard" element={<Dashboard />}></Route>
+                <Route path="/settings" element={<Settings />}></Route>
+                <Route path="/signup" element={<Signup />}></Route>
+                <Route path="/reports" element={<Reports />}></Route>
+                <Route path="/admin" element={<Admin />}></Route>
+                <Route path="/archive" element={<Archive />}></Route>
+                <Route path="/requestpasswordreset" element={<PasswordResetRequest />}></Route>
+                <Route path="passwordresetemail" element={<ResetEmailSend />}></Route>
+                <Route path="passwordReset" element={<PasswordReset />}></Route>
+              </Routes>
+            </BrowserRouter>
+          </ArchiveContext.Provider>
         </DataContext.Provider>
       </UserContext.Provider>
     </AuthContext.Provider>
