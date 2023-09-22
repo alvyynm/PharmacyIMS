@@ -18,6 +18,7 @@ import Admin from './pages/Admin';
 import PasswordResetRequest from './pages/PasswordResetRequest';
 import ResetEmailSend from './pages/PasswordResetRequest/ResetEmailSend';
 import PasswordReset from './pages/PasswordReset';
+import Archive from './pages/Archive';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -45,6 +46,7 @@ function App() {
               <Route path="/signup" element={<Signup />}></Route>
               <Route path="/reports" element={<Reports />}></Route>
               <Route path="/admin" element={<Admin />}></Route>
+              <Route path="/archive" element={<Archive />}></Route>
               <Route path="/requestpasswordreset" element={<PasswordResetRequest />}></Route>
               <Route path="passwordresetemail" element={<ResetEmailSend />}></Route>
               <Route path="passwordReset" element={<PasswordReset />}></Route>

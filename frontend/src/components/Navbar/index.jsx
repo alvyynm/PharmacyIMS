@@ -7,7 +7,7 @@ import logo from '../../assets/logo.png';
 import dashboardIcon from '../../assets/icons/dashboard.svg';
 import assetsIcon from '../../assets/icons/steering.svg';
 import calendarIcon from '../../assets/icons/calendar.svg';
-import messagesIcon from '../../assets/icons/comment.svg';
+import archiveIcon from '../../assets/icons/archive.svg';
 import settingsIcon from '../../assets/icons/setting.svg';
 import logoutIcon from '../../assets/icons/logout.svg';
 
@@ -60,15 +60,15 @@ export default function index() {
                 Reports
               </Link>
             </li>
-            {/* <li>
+            <li>
               <Link
-                to="/message"
+                to="/archive"
                 className="flex justify-start gap-3 px-6 py-3 hover:bg-custom-white text-light-gray rounded"
               >
-                <img src={messagesIcon} alt="" />
-                Messages
+                <img src={archiveIcon} alt="" />
+                Archive
               </Link>
-            </li> */}
+            </li>
           </ul>
           <ul className="flex flex-col gap-2">
             <li>
