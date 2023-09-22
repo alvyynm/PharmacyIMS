@@ -9,6 +9,7 @@ const uri = process.env.MONGODB_URI;
 const authRoutes = require("./routes/auth");
 const productRoutes = require("./routes/data");
 const archiveProductRoutes = require("./routes/archive");
+const usersRoutes = require("./routes/users");
 
 // import query service
 
@@ -35,6 +36,7 @@ app.use((req, res, next) => {
 app.use("/auth", authRoutes);
 app.use("/v1", productRoutes);
 app.use("/v1", archiveProductRoutes);
+app.use("/v1", usersRoutes);
 
 // error handling middleware
 app.use((error, req, res, next) => {
