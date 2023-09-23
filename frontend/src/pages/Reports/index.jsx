@@ -8,6 +8,7 @@ import { AuthContext } from '../../context/AuthContext';
 import { DataContext } from '../../context/DataContext';
 import { useReactToPrint } from 'react-to-print';
 const { RangePicker } = DatePicker;
+import logo from '../../assets/logo.png';
 
 function index() {
   const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
@@ -60,6 +61,10 @@ function index() {
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
   });
+
+  const currentDate = new Date();
+
+  const currentDateString = currentDate.toISOString().split('T')[0];
 
   const columns = [
     {
@@ -144,7 +149,30 @@ function index() {
               Print reports
             </h1>
             <div ref={componentRef}>
-              <Table dataSource={filteredData} columns={columns} pagination={false} />
+              <div className="printable-content">
+                {/* Report Header */}
+                <div className="flex justify-center font-bold">
+                  <img className="w-32" src={logo} alt="Logo" />
+                </div>
+                <div className="flex justify-center content-center gap-5 my-4 font-bold">
+                  <div className="flex flex-col gap-3">
+                    <h1 className="text-3xl uppercase underline">Ascend Pharmacy Utawala</h1>
+                    <div>Address: P.O BOX 86 - 0100, Nairobi Kenya</div>
+                    <div> Phone: +25470000000 | Email: ascendpharmacy@gmail.com</div>
+                    <h1 className="text-2xl">Inventory Report</h1>
+                    <hr />
+                    <p>Report date: {currentDateString.toString()} </p>
+                  </div>
+                </div>
+                <Table dataSource={filteredData} columns={columns} pagination={false} />
+
+                {/* Report Footer */}
+                <div className="my-5">
+                  <p className="text-xl flex justify-center">
+                    Ascend Pharmacy Utawala &copy; {currentDateString.split('-')[0]}
+                  </p>
+                </div>
+              </div>
             </div>
             {/* PRINT DATA DIV */}
             <div style={{ marginBottom: 16 }}>
