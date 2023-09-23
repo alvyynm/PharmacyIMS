@@ -80,8 +80,8 @@ exports.login = (req, res, next) => {
   User.findOne({ email: email })
     .then((user) => {
       if (!user) {
-        const error = new Error("Invalid credentials");
-        error.statusCode = 401;
+        const error = new Error("No account found");
+        error.statusCode = 404;
         throw error;
       }
 
