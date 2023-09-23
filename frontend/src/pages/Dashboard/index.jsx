@@ -26,8 +26,9 @@ function index() {
   const [selectedMonth, setSelectedMonth] = useState(null);
   const [selectedOrderDate, setSelectedOrderDate] = useState(null);
 
-  // Retrieve the token from local storage
+  // Retrieve the token and userId from local storage
   const token = localStorage.getItem('token');
+  const userId = localStorage.getItem('userId');
 
   useEffect(() => {
     // API call to retrieve inventory data from database
@@ -120,7 +121,7 @@ function index() {
         setLoading(true);
 
         axios
-          .delete(`http://localhost:3001/v1/product/${record._id}`, {
+          .delete(`http://localhost:3001/v1/product/${record._id}/${userId}`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -135,10 +136,16 @@ function index() {
             notifySuccess();
           })
           .catch((error) => {
-            setLoading(false);
-            setError(error);
-            notifyError();
-            console.error('Error deleting record:', error);
+            if (error.response.status === 401) {
+              console.log(error);
+              notifyUnauthorized();
+              setLoading(false);
+            } else {
+              setLoading(false);
+              setError(error);
+              notifyError();
+              console.error('Error deleting record:', error);
+            }
           });
       },
     });
@@ -262,6 +269,12 @@ function index() {
 
   const notifyError = () => {
     toast.error('Ooops! An error occured, try again later', {
+      position: toast.POSITION.TOP_CENTER,
+    });
+  };
+
+  const notifyUnauthorized = () => {
+    toast.error('You have no permission', {
       position: toast.POSITION.TOP_CENTER,
     });
   };
