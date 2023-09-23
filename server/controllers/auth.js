@@ -2,6 +2,7 @@ const bcrypt = require("bcryptjs");
 const { validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
+const sendEmail = require("../utils/email/sendEmail");
 
 const {
   resetPassword,
@@ -40,6 +41,15 @@ exports.signup = (req, res, next) => {
       return user.save();
     })
     .then((result) => {
+      // Send welcome email after successful a/c creation
+      sendEmail(
+        email,
+        "Your account has been created successfully",
+        {
+          name: name,
+        },
+        "./template/welcome.handlebars"
+      );
       res.status(201).json({
         message: "User account created successfully!",
         userId: result._id,
