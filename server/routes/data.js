@@ -2,6 +2,7 @@ const express = require("express");
 const { body, check } = require("express-validator");
 const data = require("../models/inventory");
 const isAuth = require("../middleware/is-auth");
+const isAdmin = require("../middleware/is-admin");
 const router = express.Router();
 
 const dataController = require("../controllers/data");
@@ -43,6 +44,11 @@ router.put(
 );
 
 //DELETE /v1/product/productId
-router.delete("/product/:productId", isAuth, dataController.deleteProduct);
+router.delete(
+  "/product/:productId/:userId",
+  isAuth,
+  isAdmin,
+  dataController.deleteProduct
+);
 
 module.exports = router;
