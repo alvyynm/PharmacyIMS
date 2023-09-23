@@ -52,8 +52,21 @@ export default function index() {
         //redirect to dashboard page if authenticated
         navigate('/dashboard');
       } catch (error) {
-        console.error('Login failed');
-        console.log(response.data); // log api response to console
+        if (error.response.status === 404) {
+          toast.error('No user found, please create an account', {
+            position: toast.POSITION.TOP_LEFT,
+          });
+        } else if (error.response.status === 401) {
+          toast.error('Invalid credentials provided, try again', {
+            position: toast.POSITION.TOP_LEFT,
+          });
+        } else {
+          console.error('Login failed');
+          console.log(response.data); // log api response to console
+          toast.error('Ooops! Something went wrong, try again later', {
+            position: toast.POSITION.TOP_LEFT,
+          });
+        }
       }
     } else {
       // display error message

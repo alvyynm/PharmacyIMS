@@ -49,8 +49,17 @@ export default function index() {
         navigate('/login');
         notifySuccess();
       } catch (error) {
-        console.error('Account creation failed');
-        console.log(response.data); // log api response to console
+        if (error.response.status === 422) {
+          toast.error('Email already exists, please login', {
+            position: toast.POSITION.TOP_LEFT,
+          });
+        } else {
+          toast.error('Account creation failed, try again later', {
+            position: toast.POSITION.TOP_LEFT,
+          });
+          console.error('Account creation failed');
+          console.log(response.data); // log api response to console
+        }
       }
     } else {
       // display error message
