@@ -147,7 +147,7 @@ function index() {
                     Loading...
                   </span>
                 </div>
-                <h1 className="mt-5">Loading archive data...</h1>
+                <h1 className="mt-5">Loading users data...</h1>
               </div>
             </main>
           </div>
