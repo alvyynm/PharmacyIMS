@@ -55,7 +55,7 @@ function index() {
       title: 'Name',
       dataIndex: 'name',
       onFilter: (value, record) => {
-        return record.name.includes(value);
+        return record.name.toLowerCase().includes(value.toLowerCase());
       },
       filteredValue: [searchTerm],
     },
