@@ -428,7 +428,7 @@ function index() {
                   </div>
                 </div> */}
               </div>
-              <h2 className="my-10 text-center text-xl font-bold leading-9 tracking-tight text-gray-900">
+              <h2 className="my-4 text-center text-xl font-bold leading-9 tracking-tight text-gray-900">
                 List of drugs
               </h2>
               <div className="flex justify-between mb-4">
