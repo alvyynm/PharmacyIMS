@@ -291,6 +291,23 @@ function index() {
     });
   };
 
+  let totalUnitPrice = 0;
+  let totalQuantityInStock = 0;
+
+  if (inventory) {
+    // Iterate through the array of products and accumulate the values
+    for (const product of inventory) {
+      // Multiply unitPrice by quantityInStock for each product
+      const productTotal = product.unitPrice * product.quantityInStock;
+
+      // Add the product total to the overall total
+      totalUnitPrice += productTotal;
+
+      // Accumulate total quantityInStock
+      totalQuantityInStock += product.quantityInStock;
+    }
+  }
+
   if (!isLoggedIn) {
     //redirect to login page if unauthenticated
     return <Navigate replace to="/login" />;
@@ -377,9 +394,43 @@ function index() {
               <div className="sticky top-0 left-0 right-0 z-50 bg-white">
                 <Topbar />
               </div>
-              <h1 className="my-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+              <div className="flex gap-4 justify-center mt-3">
+                <div className=" flex flex-col justify-evenly place-items-center bg-gray-300 w-64 h-20 rounded-2xl">
+                  <div>
+                    <h3 className="text-custom-black font-bold text-sm">Available Drugs</h3>
+                  </div>
+                  <div>
+                    <p>{Object.keys(inventory).length}</p>
+                  </div>
+                </div>
+                <div className=" flex flex-col justify-evenly place-items-center bg-gray-300 w-64 h-20 rounded-2xl">
+                  <div>
+                    <h3 className="text-custom-black font-bold text-sm">Stock Value</h3>
+                  </div>
+                  <div>
+                    <p>KES {totalUnitPrice.toLocaleString()}</p>
+                  </div>
+                </div>
+                <div className=" flex flex-col justify-evenly place-items-center bg-gray-300 w-72 h-20 rounded-2xl">
+                  <div>
+                    <h3 className="text-custom-black font-bold text-sm">Total Units Available</h3>
+                  </div>
+                  <div>
+                    <p>{totalQuantityInStock.toLocaleString()}</p>
+                  </div>
+                </div>
+                {/* <div className=" flex flex-col justify-evenly place-items-center bg-gray-300 w-72 h-20 rounded-2xl">
+                  <div>
+                    <h3 className="text-custom-black font-bold text-sm">Monthly Sales</h3>
+                  </div>
+                  <div>
+                    <p>KES {totalUnitPrice.toLocaleString()}</p>
+                  </div>
+                </div> */}
+              </div>
+              <h2 className="my-10 text-center text-xl font-bold leading-9 tracking-tight text-gray-900">
                 List of drugs
-              </h1>
+              </h2>
               <div className="flex justify-between mb-4">
                 <div>
                   <Input.Search
