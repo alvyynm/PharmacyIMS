@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { AuthContext } from '../../context/AuthContext';
+import { UserContext } from '../../context/UserContext';
 import { Link } from 'react-router-dom';
 import logo from '../../assets/logo.png';
 
@@ -13,6 +14,7 @@ import logoutIcon from '../../assets/icons/logout.svg';
 
 export default function index() {
   const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
+  const { user, setUser } = useContext(UserContext);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -22,6 +24,11 @@ export default function index() {
 
     //redirect to login page
     navigate('/login');
+  };
+
+  // check if user is Admin
+  const isAdmin = () => {
+    return user.role === 'ADMIN';
   };
 
   return (
@@ -42,15 +49,17 @@ export default function index() {
                 <img src={dashboardIcon} alt="" /> Dashboard
               </Link>
             </li>
-            <li>
-              <Link
-                to="/admin"
-                className="flex justify-start gap-3 px-6 py-3 hover:bg-custom-white text-light-gray rounded"
-              >
-                <img src={assetsIcon} alt="" />
-                Admin
-              </Link>
-            </li>
+            {isAdmin() && (
+              <li>
+                <Link
+                  to="/admin"
+                  className="flex justify-start gap-3 px-6 py-3 hover:bg-custom-white text-light-gray rounded"
+                >
+                  <img src={assetsIcon} alt="" />
+                  Admin
+                </Link>
+              </li>
+            )}
             <li>
               <Link
                 to="/reports"
