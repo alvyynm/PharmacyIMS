@@ -1,7 +1,8 @@
 const Users = require("../models/user");
 
 exports.getUsers = (req, res, next) => {
-  Users.find()
+  const loggedUserId = req.params.userId;
+  Users.find({ _id: { $ne: loggedUserId } })
     .then((users) => {
       res
         .status(200)
