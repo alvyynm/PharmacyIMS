@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import { Link } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext';
 
 // Images
@@ -23,9 +24,11 @@ export default function index() {
           </button>
         </div>
         <div>
-          <button className="flex">
-            <img src={profileimage} alt="" className="rounded-3xl overflow-hidden" />
-          </button>
+          <Link to="/settings">
+            <button className="flex">
+              <img src={profileimage} alt="" className="rounded-3xl overflow-hidden" />
+            </button>
+          </Link>
         </div>
       </div>
     </div>
