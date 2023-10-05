@@ -553,7 +553,13 @@ function index() {
                   <Button key="cancel" onClick={onCancelAdd}>
                     Cancel
                   </Button>,
-                  <Button key="submit" type="primary" loading={modalLoading} onClick={onAddRecord}>
+                  <Button
+                    className="bg-indigo-600"
+                    key="submit"
+                    type="primary"
+                    loading={modalLoading}
+                    onClick={onAddRecord}
+                  >
                     Submit
                   </Button>,
                 ]}

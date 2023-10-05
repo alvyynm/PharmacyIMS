@@ -176,8 +176,10 @@ function index() {
             </div>
             {/* PRINT DATA DIV */}
             <div style={{ marginBottom: 16 }}>
+              <p className="ml-3">Filter by expiryDate:</p>
               <RangePicker
                 style={{ marginRight: 8 }}
+                className="ml-3 mt-2"
                 onChange={(dates) => {
                   console.log(dates);
                   if (dates && dates.length === 2) {
@@ -188,10 +190,12 @@ function index() {
                   }
                 }}
               />
-              <Button type="primary" onClick={handleDateFilter}>
+              <Button className="bg-indigo-600 ml-3" type="primary" onClick={handleDateFilter}>
                 Filter
               </Button>
-              <Button onClick={clearDateFilter}>Reset</Button>
+              <Button className="ml-3" onClick={clearDateFilter}>
+                Reset
+              </Button>
             </div>
             <div>
               <button

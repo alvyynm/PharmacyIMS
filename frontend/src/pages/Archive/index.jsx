@@ -119,6 +119,7 @@ function index() {
           />
           <Button
             type="primary"
+            className="bg-indigo-600"
             onClick={() => handleFilter()}
             icon={<i className="fas fa-filter" />}
           >
@@ -254,7 +255,8 @@ function index() {
                 <Table dataSource={filteredData} columns={columns} pagination={false} />
               </div>
               {/* PRINT DATA DIV */}
-              <div style={{ marginBottom: 16 }}>
+              <div className="m-3">
+                <p className="mb-3">Filter by archiveDate: </p>
                 <RangePicker
                   style={{ marginRight: 8 }}
                   onChange={(dates) => {
@@ -267,7 +269,7 @@ function index() {
                     }
                   }}
                 />
-                <Button type="primary" onClick={handleDateFilter}>
+                <Button className="bg-indigo-600" type="primary" onClick={handleDateFilter}>
                   Filter
                 </Button>
                 <Button onClick={clearDateFilter}>Reset</Button>
