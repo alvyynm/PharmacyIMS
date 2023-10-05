@@ -28,7 +28,7 @@ export default function index() {
 
   // check if user is Admin
   const isAdmin = () => {
-    return user.role === 'ADMIN';
+    return user?.role === 'ADMIN';
   };
 
   return (
