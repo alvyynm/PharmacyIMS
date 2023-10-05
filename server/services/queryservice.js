@@ -21,6 +21,20 @@ async function getProductsWithinDateRange() {
   }
 }
 
+async function getProductsWithLessQuantity() {
+  // Find products with quantityInStock less than 20
+  try {
+    const products = await Inventory.find({
+      quantityInStock: { $lt: 20 },
+    }).exec();
+    return products;
+    // console.log("Products with quantityInStock less than 20:", products);
+  } catch (error) {
+    console.error("Error querying products:", error);
+    return [];
+  }
+}
+
 //  Send email notification
 async function sendEmail(products) {
   const transporter = nodemailer.createTransport({
@@ -51,15 +65,49 @@ async function sendEmail(products) {
   }
 }
 
+//  Send email notification
+async function sendQuantityEmail(products) {
+  const transporter = nodemailer.createTransport({
+    host: "sandbox.smtp.mailtrap.io",
+    port: 2525,
+    auth: {
+      user: process.env.MAILTRAP_USERNAME,
+      pass: process.env.MAILTRAP_PASSWORD,
+    },
+  });
+
+  transporter.verify().then(console.log).catch(console.error);
+
+  const mailOptions = {
+    from: process.env.EMAIL,
+    to: "pinoma1716@v2ssr.com",
+    subject: "Products With Less Quantity",
+    text: `The following products have less than 20 items in stock:\n\n${products
+      .map((product) => product.name)
+      .join("\n")}`,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log("Email sent successfully");
+  } catch (error) {
+    console.error("Error sending email:", error);
+  }
+}
+
 function startScheduledTask() {
   // Schedule the task to run every 3 minutes
   // cron.schedule("*/3 * * * *", async () => {
   //   console.log("Running task...");
 
   //   const products = await getProductsWithinDateRange();
+  //   const productWithLessQuantity = await getProductsWithLessQuantity(products);
 
   //   if (products.length > 0) {
   //     await sendEmail(products);
+  //   }
+  //   if (productWithLessQuantity.length > 0) {
+  //     await sendQuantityEmail(productWithLessQuantity);
   //   }
   // });
 
@@ -68,9 +116,14 @@ function startScheduledTask() {
     console.log("Running task...");
 
     const products = await getProductsWithinDateRange();
+    const productWithLessQuantity = await getProductsWithLessQuantity(products);
 
     if (products.length > 0) {
       await sendEmail(products);
+    }
+
+    if (productWithLessQuantity.length > 0) {
+      await sendQuantityEmail(productWithLessQuantity);
     }
   });
 }
