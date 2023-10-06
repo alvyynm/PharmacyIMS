@@ -21,6 +21,7 @@ import PasswordResetRequest from './pages/PasswordResetRequest';
 import ResetEmailSend from './pages/PasswordResetRequest/ResetEmailSend';
 import PasswordReset from './pages/PasswordReset';
 import Archive from './pages/Archive';
+import Error from './pages/Error';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -56,6 +57,7 @@ function App() {
                   <Route path="/requestpasswordreset" element={<PasswordResetRequest />}></Route>
                   <Route path="passwordresetemail" element={<ResetEmailSend />}></Route>
                   <Route path="passwordReset" element={<PasswordReset />}></Route>
+                  <Route path="*" element={<Error />}></Route>
                 </Routes>
               </BrowserRouter>
             </UsersContext.Provider>
