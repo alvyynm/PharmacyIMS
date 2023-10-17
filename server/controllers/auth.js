@@ -115,6 +115,7 @@ exports.login = (req, res, next) => {
           name: loggedInUser.name,
           role: loggedInUser.role,
           password: loggedInUser.password,
+          status: loggedInUser.status,
         },
       });
     })
