@@ -1,6 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Navigate, Link } from 'react-router-dom';
-import { employeeData } from '../../data/Employee';
 import { Table, Modal, Input, Select, Space } from 'antd';
 import axios from 'axios';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
@@ -10,7 +9,6 @@ import { AuthContext } from '../../context/AuthContext';
 import { UsersContext } from '../../context/UsersContext';
 
 function index() {
-  const [Data, setData] = useState(employeeData);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [edit, setEdit] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
