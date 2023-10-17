@@ -60,6 +60,11 @@ export default function index() {
           toast.error('Invalid credentials provided, try again', {
             position: toast.POSITION.TOP_LEFT,
           });
+        } else if (error.response.status === 403) {
+          // log response error message to the user via toast
+          toast.error(`${error.response.data.error.message}`, {
+            position: toast.POSITION.TOP_LEFT,
+          });
         } else {
           console.error('Login failed');
           console.log(response.data); // log api response to console
