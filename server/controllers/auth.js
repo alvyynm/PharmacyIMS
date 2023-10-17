@@ -95,29 +95,51 @@ exports.login = (req, res, next) => {
         throw error;
       }
 
-      // create jwt token and return it to the user
-      const token = jwt.sign(
-        {
-          email: loggedInUser.email,
-          userId: loggedInUser._id.toString(),
-        },
-        secret,
-        {
-          expiresIn: "4h",
-        }
-      );
-      res.status(200).json({
-        message: "Login successful!",
-        token: token,
-        userData: {
-          userId: loggedInUser._id.toString(),
-          email: loggedInUser.email,
-          name: loggedInUser.name,
-          role: loggedInUser.role,
-          password: loggedInUser.password,
-          status: loggedInUser.status,
-        },
-      });
+      // if user status is "PENDING_APPROVAL" or "INACTIVE" throw an error else log in the user
+      if (
+        loggedInUser.status === "PENDING_APPROVAL" ||
+        loggedInUser.status === "INACTIVE"
+      ) {
+        res.status(403).json({
+          error: {
+            message:
+              loggedInUser.status === "PENDING_APPROVAL"
+                ? "Account pending approval, contact admin!"
+                : "Account suspended, contact admin!",
+            userData: {
+              userId: loggedInUser._id.toString(),
+              email: loggedInUser.email,
+              name: loggedInUser.name,
+              status: loggedInUser.status,
+            },
+          },
+        });
+      } else {
+        // log in the user
+        // create jwt token and return it to the user
+        const token = jwt.sign(
+          {
+            email: loggedInUser.email,
+            userId: loggedInUser._id.toString(),
+          },
+          secret,
+          {
+            expiresIn: "4h",
+          }
+        );
+        res.status(200).json({
+          message: "Login successful!",
+          token: token,
+          userData: {
+            userId: loggedInUser._id.toString(),
+            email: loggedInUser.email,
+            name: loggedInUser.name,
+            role: loggedInUser.role,
+            password: loggedInUser.password,
+            status: loggedInUser.status,
+          },
+        });
+      }
     })
     .catch((error) => {
       console.log(error);
