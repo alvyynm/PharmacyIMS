@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Navigate, Link } from 'react-router-dom';
 import { employeeData } from '../../data/Employee';
-import { Table, Modal, Input } from 'antd';
+import { Table, Modal, Input, Select, Space } from 'antd';
 import axios from 'axios';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import Navbar from '../../components/Navbar';
@@ -108,7 +108,7 @@ function index() {
       okType: 'danger',
       cancelText: 'No',
       onOk: () => {
-        setData((pre) => {
+        setUsers((pre) => {
           return pre.filter((person) => person.id != record.id);
         });
       },
@@ -119,6 +119,10 @@ function index() {
   const Edit = (record) => {
     setIsModalOpen(true);
     setEdit({ ...record });
+  };
+
+  const handleChange = (value) => {
+    console.log(`selected ${value}`);
   };
 
   // Cancel editing and reset data to initial state
@@ -287,9 +291,12 @@ function index() {
                 okText="Save"
                 onCancel={() => ResetEditing()}
                 onOk={() => {
-                  setData((pre) => {
+                  setUsers((pre) => {
                     return pre.map((employee) => {
-                      if (employee.id === edit.id) {
+                      console.log('Employee data:', employee);
+                      console.log('Edited data:', edit);
+                      if (employee._id === edit._id) {
+                        console.log('Updated employee:', edit);
                         return edit;
                       } else {
                         return employee;
@@ -300,6 +307,7 @@ function index() {
                 }}
               >
                 <Input
+                  addonBefore=<p>User Name: </p>
                   value={edit?.name}
                   onChange={(e) => {
                     setEdit((pre) => {
@@ -309,6 +317,7 @@ function index() {
                   className="mb-3 rounded-lg"
                 />
                 <Input
+                  addonBefore=<p>User Email: </p>
                   value={edit?.email}
                   onChange={(e) => {
                     setEdit((pre) => {
@@ -317,33 +326,58 @@ function index() {
                   }}
                   className="mb-3 rounded-lg"
                 />
-                {/* <Input
-              value={edit?.address}
-              onChange={(e) => {
-                setEdit((pre) => {
-                  return { ...pre, address: e.target.value };
-                });
-              }}
-              className="mb-3 rounded-lg"
-            /> */}
-                <Input
-                  value={edit?.phone}
-                  onChange={(e) => {
-                    setEdit((pre) => {
-                      return { ...pre, phone: e.target.value };
-                    });
-                  }}
-                  className="mb-3 rounded-lg"
-                />
-                <Input
-                  value={edit?.role}
-                  onChange={(e) => {
-                    setEdit((pre) => {
-                      return { ...pre, role: e.target.value };
-                    });
-                  }}
-                  className="mb-3 rounded-lg"
-                />
+                <Space>
+                  <p>User Role: </p>
+
+                  <Select
+                    value={edit?.role}
+                    style={{
+                      width: 120,
+                    }}
+                    onChange={(e) => {
+                      setEdit((pre) => {
+                        return { ...pre, role: e };
+                      });
+                    }}
+                    options={[
+                      {
+                        value: 'USER',
+                        label: 'USER',
+                      },
+                      {
+                        value: 'ADMIN',
+                        label: 'ADMIN',
+                      },
+                    ]}
+                  />
+
+                  <p>User Status: </p>
+                  <Select
+                    value={edit?.status}
+                    style={{
+                      width: 180,
+                    }}
+                    onChange={(e) => {
+                      setEdit((pre) => {
+                        return { ...pre, status: e };
+                      });
+                    }}
+                    options={[
+                      {
+                        value: 'ACTIVE',
+                        label: 'ACTIVE',
+                      },
+                      {
+                        value: 'INACTIVE',
+                        label: 'INACTIVE',
+                      },
+                      {
+                        value: 'PENDING_APPROVAL',
+                        label: 'PENDING_APPROVAL',
+                      },
+                    ]}
+                  />
+                </Space>
               </Modal>
             </main>
           </div>
