@@ -81,6 +81,11 @@ function index() {
       onFilter: (value, record) => record.role.indexOf(value) === 0,
     },
     {
+      key: 'status',
+      title: 'Status',
+      dataIndex: 'status',
+    },
+    {
       key: 'action',
       title: 'Actions',
       render: (record) => {
