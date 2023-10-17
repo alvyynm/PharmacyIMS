@@ -18,6 +18,11 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
+  status: {
+    type: String,
+    enum: ["ACTIVE", "INACTIVE", "PENDING_APPROVAL"],
+    default: "PENDING_APPROVAL",
+  },
 });
 
 module.exports = mongoose.model("User", userSchema);
