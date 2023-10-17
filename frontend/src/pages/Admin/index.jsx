@@ -3,6 +3,7 @@ import { Navigate, Link } from 'react-router-dom';
 import { Table, Modal, Input, Select, Space } from 'antd';
 import axios from 'axios';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { toast } from 'react-toastify';
 import Navbar from '../../components/Navbar';
 import Topbar from '../../components/Topbar';
 import { AuthContext } from '../../context/AuthContext';
@@ -113,14 +114,57 @@ function index() {
     });
   };
 
+  // Toast helper functions for displaying notifications
+
+  const notifyError = () => {
+    toast.error('Ooops! An error occured, try again later', {
+      position: toast.POSITION.TOP_CENTER,
+    });
+  };
+
+  const notifyUpdateSuccess = () => {
+    toast.success('Employee data updated successfully', {
+      position: toast.POSITION.TOP_CENTER,
+    });
+  };
+
   // Edit user records
   const Edit = (record) => {
     setIsModalOpen(true);
     setEdit({ ...record });
   };
 
-  const handleChange = (value) => {
-    console.log(`selected ${value}`);
+  const handleUpdate = async (employee) => {
+    console.log(employee);
+    const updatedEmployee = {
+      name: employee.name,
+      email: employee.email,
+      role: employee.role,
+      status: employee.status,
+    };
+
+    try {
+      axios
+        .put(`http://localhost:3001/v1/user/${userId}/${employee._id}`, updatedEmployee, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        })
+        .then((response) => {
+          notifyUpdateSuccess(); // #TODO: create custom success message
+          console.log('Employee data updated successfully:', response);
+        })
+        .catch((error) => {
+          setIsModalOpen(false);
+          setError('An error occurred while updating employee data');
+          console.error('Error updating data:', error);
+          notifyError();
+        });
+    } catch (error) {
+      console.error('Error updating record:', error);
+      notifyError();
+    }
   };
 
   // Cancel editing and reset data to initial state
@@ -294,6 +338,9 @@ function index() {
                       console.log('Employee data:', employee);
                       console.log('Edited data:', edit);
                       if (employee._id === edit._id) {
+                        // call the api and update the record in the database
+
+                        handleUpdate(edit);
                         console.log('Updated employee:', edit);
                         return edit;
                       } else {
