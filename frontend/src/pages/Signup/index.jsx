@@ -24,7 +24,7 @@ export default function index() {
   };
 
   const notifySuccess = () => {
-    toast.success('Account created successfully', {
+    toast.success('Account created successfully wait for admin approval', {
       position: toast.POSITION.TOP_LEFT,
     });
   };
