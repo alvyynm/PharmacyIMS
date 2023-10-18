@@ -151,16 +151,23 @@ function index() {
     });
   };
 
+  // Create new record
+  const [form] = Form.useForm();
+
   // Edit records
 
   const handleUpdate = async (record) => {
+    // get updated date data from the modal
+    const { expiryDate, orderDate } = await form.validateFields();
+
     const updatedRecord = {
       name: record.name,
       price: record.unitPrice,
       category: record.category,
       quantity: record.quantityInStock,
       shelfNumber: record.shelfNumber,
-      expiryDate: record.expiryDate,
+      expiryDate: expiryDate.$d.toISOString(),
+      orderDate: orderDate.$d.toISOString(),
     };
     console.log('Record', updatedRecord);
     try {
@@ -198,9 +205,6 @@ function index() {
     setEdit(null);
     setIsModalOpen(false);
   };
-
-  // Create new record
-  const [form] = Form.useForm();
 
   // Function to disable past dates
   const disabledDate = (current) => {
@@ -471,6 +475,7 @@ function index() {
                     return pre.map((record) => {
                       if (record._id === edit._id) {
                         console.log(record);
+                        console.log(edit);
                         // call the api and update the record
                         handleUpdate(edit);
                         return edit;
@@ -482,61 +487,86 @@ function index() {
                   ResetEditing();
                 }}
               >
-                <label htmlFor="name">Name</label>
-                <Input
-                  id="name"
-                  value={edit?.name}
-                  onChange={(e) => {
-                    setEdit((pre) => {
-                      return { ...pre, name: e.target.value };
-                    });
-                  }}
-                  className="mb-3 rounded-lg"
-                />
-                <label htmlFor="category">Category</label>
-                <Input
-                  id="category"
-                  value={edit?.category}
-                  onChange={(e) => {
-                    setEdit((pre) => {
-                      return { ...pre, category: e.target.value };
-                    });
-                  }}
-                  className="mb-3 rounded-lg"
-                />
-                <label htmlFor="unitPrice">Price</label>
-                <Input
-                  id="unitPrice"
-                  value={edit?.unitPrice}
-                  onChange={(e) => {
-                    setEdit((pre) => {
-                      return { ...pre, unitPrice: e.target.value };
-                    });
-                  }}
-                  className="mb-3 rounded-lg"
-                />
-                <label htmlFor="quantityInStock">Quantity in Stock</label>
-                <Input
-                  id="quantityInStock"
-                  value={edit?.quantityInStock}
-                  onChange={(e) => {
-                    setEdit((pre) => {
-                      return { ...pre, quantityInStock: e.target.value };
-                    });
-                  }}
-                  className="mb-3 rounded-lg"
-                />
-                <label htmlFor="shelfNumber">Shelf Number</label>
-                <Input
-                  id="shelfNumber"
-                  value={edit?.shelfNumber}
-                  onChange={(e) => {
-                    setEdit((pre) => {
-                      return { ...pre, shelfNumber: e.target.value };
-                    });
-                  }}
-                  className="mb-3 rounded-lg"
-                />
+                <Form form={form}>
+                  <label htmlFor="name">Name</label>
+                  <Input
+                    id="name"
+                    value={edit?.name}
+                    onChange={(e) => {
+                      setEdit((pre) => {
+                        return { ...pre, name: e.target.value };
+                      });
+                    }}
+                    className="mb-3 rounded-lg"
+                  />
+                  <label htmlFor="category">Category</label>
+                  <Input
+                    id="category"
+                    value={edit?.category}
+                    onChange={(e) => {
+                      setEdit((pre) => {
+                        return { ...pre, category: e.target.value };
+                      });
+                    }}
+                    className="mb-3 rounded-lg"
+                  />
+                  <label htmlFor="unitPrice">Price</label>
+                  <Input
+                    id="unitPrice"
+                    value={edit?.unitPrice}
+                    onChange={(e) => {
+                      setEdit((pre) => {
+                        return { ...pre, unitPrice: e.target.value };
+                      });
+                    }}
+                    className="mb-3 rounded-lg"
+                  />
+                  <label htmlFor="quantityInStock">Quantity in Stock</label>
+                  <Input
+                    id="quantityInStock"
+                    value={edit?.quantityInStock}
+                    onChange={(e) => {
+                      setEdit((pre) => {
+                        return { ...pre, quantityInStock: e.target.value };
+                      });
+                    }}
+                    className="mb-3 rounded-lg"
+                  />
+                  <label htmlFor="shelfNumber">Shelf Number</label>
+                  <Input
+                    id="shelfNumber"
+                    value={edit?.shelfNumber}
+                    onChange={(e) => {
+                      setEdit((pre) => {
+                        return { ...pre, shelfNumber: e.target.value };
+                      });
+                    }}
+                    className="mb-3 rounded-lg"
+                  />
+                  <Form.Item name="orderDate" label="Order Date" rules={[{ required: true }]}>
+                    <DatePicker
+                      picker="date"
+                      onChange={(date, dateString) => {
+                        console.log(date);
+                        const dateT = date?.$d.toISOString();
+                        console.log(`Order date: `, dateT);
+                      }}
+                    />
+                    {selectedOrderDate && <p>Selected Date: {selectedOrderDate}</p>}
+                  </Form.Item>
+                  <Form.Item name="expiryDate" label="Expiry Date" rules={[{ required: true }]}>
+                    <DatePicker
+                      picker="date"
+                      disabledDate={disabledDate}
+                      onChange={(date, dateString) => {
+                        console.log(dateString);
+                        const dateT = date?.$d.toISOString();
+                        console.log(dateT);
+                      }}
+                    />
+                    {selectedMonth && <p>Selected Month: {selectedMonth}</p>}
+                  </Form.Item>
+                </Form>
               </Modal>
 
               {/* Add record modal */}
