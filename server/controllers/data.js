@@ -81,6 +81,7 @@ exports.updateProduct = (req, res, next) => {
   const quantity = req.body.quantity;
   const shelfNumber = req.body.shelfNumber;
   const expiryDate = req.body.expiryDate;
+  const orderDate = req.body.orderDate;
 
   // update data in db
   Inventory.findById(productId)
@@ -97,6 +98,7 @@ exports.updateProduct = (req, res, next) => {
       product.quantityInStock = quantity;
       product.shelfNumber = shelfNumber;
       product.expiryDate = expiryDate;
+      product.orderDate = orderDate;
 
       //save changes
       return product.save();
