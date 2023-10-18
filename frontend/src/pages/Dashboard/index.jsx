@@ -486,6 +486,35 @@ function index() {
                   });
                   ResetEditing();
                 }}
+                footer={[
+                  <Button key="cancel" onClick={ResetEditing}>
+                    Cancel
+                  </Button>,
+                  <Button
+                    className="bg-indigo-600"
+                    key="submit"
+                    type="primary"
+                    loading={modalLoading}
+                    onClick={() => {
+                      setInventory((pre) => {
+                        return pre.map((record) => {
+                          if (record._id === edit._id) {
+                            console.log(record);
+                            console.log(edit);
+                            // call the api and update the record
+                            handleUpdate(edit);
+                            return edit;
+                          } else {
+                            return record;
+                          }
+                        });
+                      });
+                      ResetEditing();
+                    }}
+                  >
+                    Save
+                  </Button>,
+                ]}
               >
                 <Form form={form}>
                   <label htmlFor="name">Name</label>
