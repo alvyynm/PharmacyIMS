@@ -1,4 +1,5 @@
 const Users = require("../models/user");
+const sendEmail = require("../utils/email/sendEmail");
 
 exports.getUsers = (req, res, next) => {
   const loggedUserId = req.params.userId;
@@ -26,6 +27,8 @@ exports.updateUser = (req, res, next) => {
   const role = req.body.role;
   const status = req.body.status;
 
+  let currentStatus;
+
   // 2. find employee data in db and update
   Users.findById(employeeId)
     .then((employee) => {
@@ -34,6 +37,7 @@ exports.updateUser = (req, res, next) => {
         error.statusCode = 422;
         throw error;
       }
+      currentStatus = employee.status;
 
       employee.name = name;
       employee.email = email;
@@ -44,6 +48,17 @@ exports.updateUser = (req, res, next) => {
       return employee.save();
     })
     .then((result) => {
+      if (currentStatus === "PENDING_APPROVAL" && result.status === "ACTIVE") {
+        // SEND EMAIL OF APPROVAL TO USER after admin approval
+        sendEmail(
+          email,
+          `Your account has been approved. You can now login`,
+          {
+            name: name,
+          },
+          "./template/welcome.handlebars"
+        );
+      }
       res.status(200).json({
         message: "Employee info updated successfully",
         employee: result,
