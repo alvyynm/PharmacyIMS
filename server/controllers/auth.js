@@ -44,11 +44,11 @@ exports.signup = (req, res, next) => {
       // Send welcome email after successful a/c creation
       sendEmail(
         email,
-        "Your account has been created successfully please wait for admin approval before continuing",
+        "Your account has been created successfully",
         {
           name: name,
         },
-        "./template/welcome.handlebars"
+        "./template/approval.handlebars"
       );
       res.status(201).json({
         message: "User account created successfully!",
