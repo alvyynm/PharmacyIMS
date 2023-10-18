@@ -44,7 +44,7 @@ exports.signup = (req, res, next) => {
       // Send welcome email after successful a/c creation
       sendEmail(
         email,
-        "Your account has been created successfully",
+        "Your account has been created successfully please wait for admin approval before continuing",
         {
           name: name,
         },
