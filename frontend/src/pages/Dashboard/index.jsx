@@ -158,7 +158,7 @@ function index() {
 
   const handleUpdate = async (record) => {
     // get updated date data from the modal
-    const { expiryDate, orderDate } = await form.validateFields();
+    const { expiryDate, orderDate } = await form.getFieldsValue();
 
     const updatedRecord = {
       name: record.name,
@@ -166,8 +166,8 @@ function index() {
       category: record.category,
       quantity: record.quantityInStock,
       shelfNumber: record.shelfNumber,
-      expiryDate: expiryDate.$d.toISOString(),
-      orderDate: orderDate.$d.toISOString(),
+      expiryDate: expiryDate?.$d.toISOString() || record.expiryDate,
+      orderDate: orderDate?.$d.toISOString() || record.orderDate,
     };
     console.log('Record', updatedRecord);
     try {
