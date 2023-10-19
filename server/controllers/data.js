@@ -130,9 +130,10 @@ exports.updateProduct = (req, res, next) => {
     })
     .then((result) => {
       // result of calling salesDocument.save()
-      res
-        .status(200)
-        .json({ message: "Sale recorded successfully", post: result });
+      res.status(200).json({
+        message: "Product info updated successfully and sale recorded",
+        post: result,
+      });
     })
     .catch((err) => {
       if (!err.statusCode) {
