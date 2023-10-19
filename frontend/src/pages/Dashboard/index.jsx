@@ -431,7 +431,7 @@ function index() {
                   </div>
                 </div> */}
               </div>
-              <div className="flex justify-between mb-4">
+              <div className="flex justify-between mb-4 mt-6">
                 <div>
                   <Input.Search
                     onSearch={(value) => {
