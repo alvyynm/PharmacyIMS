@@ -117,7 +117,7 @@ exports.updateProduct = (req, res, next) => {
           productId: result._id,
           name: result.name,
           category: result.category,
-          price: result.price,
+          price: result.unitPrice,
           quantity: oldQuantity - result.quantityInStock,
         });
 
