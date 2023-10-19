@@ -54,7 +54,6 @@ function index() {
       title: 'Name',
       dataIndex: 'name',
       sorter: (a, b) => a.name > b.name,
-      sortDirections: ['descend'],
       onFilter: (value, record) => {
         return record.name.toLowerCase().includes(value.toLowerCase());
       },
