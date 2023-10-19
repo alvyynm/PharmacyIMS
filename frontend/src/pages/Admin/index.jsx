@@ -67,17 +67,7 @@ function index() {
       key: 'role',
       title: 'Role',
       dataIndex: 'role',
-      filters: [
-        {
-          text: 'ADMIN',
-          value: 'ADMIN',
-        },
-        {
-          text: 'USER',
-          value: 'USER',
-        },
-      ],
-      onFilter: (value, record) => record.role.indexOf(value) === 0,
+      sorter: (a, b) => a.role.length - b.role.length,
     },
     {
       key: 'status',
