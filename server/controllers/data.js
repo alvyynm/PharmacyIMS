@@ -2,6 +2,7 @@ const { validationResult } = require("express-validator");
 const Inventory = require("../models/inventory");
 const User = require("../models/user");
 const Archive = require("../models/archive");
+const Sale = require("../models/sale");
 
 exports.getProducts = (req, res, next) => {
   Inventory.find()
