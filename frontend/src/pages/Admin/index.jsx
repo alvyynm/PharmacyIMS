@@ -83,6 +83,7 @@ function index() {
       key: 'status',
       title: 'Status',
       dataIndex: 'status',
+      sorter: (a, b) => a.status.length - b.status.length,
     },
     {
       key: 'action',
