@@ -11,6 +11,7 @@ import calendarIcon from '../../assets/icons/calendar.svg';
 import archiveIcon from '../../assets/icons/archive.svg';
 import settingsIcon from '../../assets/icons/setting.svg';
 import logoutIcon from '../../assets/icons/logout.svg';
+import salesIcon from '../../assets/icons/salesicon.png';
 
 export default function index() {
   const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
@@ -67,6 +68,15 @@ export default function index() {
               >
                 <img src={calendarIcon} alt="" />
                 Reports
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/sales"
+                className="flex justify-start gap-3 px-6 py-3 hover:bg-custom-white text-light-gray rounded"
+              >
+                <img src={salesIcon} alt="" />
+                Sales
               </Link>
             </li>
             <li>
