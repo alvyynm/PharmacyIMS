@@ -10,6 +10,7 @@ const authRoutes = require("./routes/auth");
 const productRoutes = require("./routes/data");
 const archiveProductRoutes = require("./routes/archive");
 const usersRoutes = require("./routes/users");
+const salesRoutes = require("./routes/sales");
 
 // import query service
 
@@ -37,6 +38,7 @@ app.use("/auth", authRoutes);
 app.use("/v1", productRoutes);
 app.use("/v1", archiveProductRoutes);
 app.use("/v1", usersRoutes);
+app.use("/v1", salesRoutes);
 
 // error handling middleware
 app.use((error, req, res, next) => {
