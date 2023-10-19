@@ -6,7 +6,6 @@ import logo from '../../assets/logo.png';
 
 // Dashboard icons
 import dashboardIcon from '../../assets/icons/dashboard.svg';
-import assetsIcon from '../../assets/icons/steering.svg';
 import calendarIcon from '../../assets/icons/calendar.svg';
 import archiveIcon from '../../assets/icons/archive.svg';
 import settingsIcon from '../../assets/icons/setting.svg';
