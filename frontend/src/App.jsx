@@ -20,6 +20,7 @@ import Admin from './pages/Admin';
 import PasswordResetRequest from './pages/PasswordResetRequest';
 import ResetEmailSend from './pages/PasswordResetRequest/ResetEmailSend';
 import PasswordReset from './pages/PasswordReset';
+import Sales from './pages/Sales';
 import Archive from './pages/Archive';
 import Error from './pages/Error';
 
@@ -53,6 +54,7 @@ function App() {
                   <Route path="/signup" element={<Signup />}></Route>
                   <Route path="/reports" element={<Reports />}></Route>
                   <Route path="/admin" element={<Admin />}></Route>
+                  <Route path="/sales" element={<Sales />}></Route>
                   <Route path="/archive" element={<Archive />}></Route>
                   <Route path="/requestpasswordreset" element={<PasswordResetRequest />}></Route>
                   <Route path="passwordresetemail" element={<ResetEmailSend />}></Route>
