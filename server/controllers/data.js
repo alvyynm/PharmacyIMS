@@ -84,6 +84,8 @@ exports.updateProduct = (req, res, next) => {
   const expiryDate = req.body.expiryDate;
   const orderDate = req.body.orderDate;
 
+  let oldQuantity; // declare variable to store the current quantity before updating
+
   // update data in db
   Inventory.findById(productId)
     .then((product) => {
@@ -92,6 +94,9 @@ exports.updateProduct = (req, res, next) => {
         error.statusCode = 422;
         throw error;
       }
+
+      // store current quantity in stock
+      oldQuantity = product.quantityInStock;
 
       product.name = name;
       product.unitPrice = price;
@@ -105,9 +110,29 @@ exports.updateProduct = (req, res, next) => {
       return product.save();
     })
     .then((result) => {
+      // if the product quantity is less than the previous quantity after update, record data in sales collection
+      if (oldQuantity > result.quantityInStock) {
+        // record change in sales collection
+        const salesDocument = new Sale({
+          productId: result._id,
+          name: result.name,
+          category: result.category,
+          price: result.price,
+          quantity: oldQuantity - result.quantityInStock,
+        });
+
+        return salesDocument.save(); // save sales data to db
+      } else {
+        res
+          .status(200)
+          .json({ message: "Product info updated successfully", post: result });
+      }
+    })
+    .then((result) => {
+      // result of calling salesDocument.save()
       res
         .status(200)
-        .json({ message: "Product info updated successfully", post: result });
+        .json({ message: "Sale recorded successfully", post: result });
     })
     .catch((err) => {
       if (!err.statusCode) {
