@@ -253,9 +253,6 @@ function index() {
               <div className="sticky top-0 left-0 right-0 z-50 bg-white">
                 <Topbar />
               </div>
-              <h1 className="my-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-                Archived Data
-              </h1>
               <div ref={componentRef}>
                 <div className="printable-content">
                   {/* Report Header */}
