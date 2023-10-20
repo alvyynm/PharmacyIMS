@@ -112,13 +112,16 @@ exports.updateProduct = (req, res, next) => {
     .then((result) => {
       // if the product quantity is less than the previous quantity after update, record data in sales collection
       if (oldQuantity > result.quantityInStock) {
+        // calculate the sales quantity
+        const saleQuantity = oldQuantity - result.quantityInStock;
         // record change in sales collection
         const salesDocument = new Sale({
           productId: result._id,
           name: result.name,
           category: result.category,
           price: result.unitPrice,
-          quantity: oldQuantity - result.quantityInStock,
+          saleValue: result.unitPrice * saleQuantity,
+          quantity: saleQuantity,
         });
 
         return salesDocument.save(); // save sales data to db
