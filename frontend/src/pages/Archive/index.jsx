@@ -5,6 +5,8 @@ import moment from 'moment';
 import axios from 'axios';
 import Navbar from '../../components/Navbar';
 import Topbar from '../../components/Topbar';
+import Loading from '../../components/Loading';
+import Error from '../../components/Error';
 import { AuthContext } from '../../context/AuthContext';
 import { ArchiveContext } from '../../context/ArchiveContext';
 import { useReactToPrint } from 'react-to-print';
@@ -173,149 +175,89 @@ function index() {
     //redirect to login page if unauthenticated
     return <Navigate replace to="/login" />;
   } else {
-    if (loading) {
-      return (
-        <section className="relative">
-          <div className="grid grid-cols-6 grid-rows-1 gap-12">
-            {/* Fixes nav to the left avoid overscroll */}
-            <div className="h-screen sticky top-0">
-              <Navbar />
-            </div>
-            <main className="col-span-5">
-              {/* Positions topbar to be sticky at the top on scroll */}
-              <div className="sticky top-0 left-0 right-0 z-50 bg-white">
-                <Topbar />
-              </div>
-              <div className="h-screen flex flex-col items-center justify-center">
-                <div
-                  className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
-                  role="status"
-                >
-                  <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
-                    Loading...
-                  </span>
-                </div>
-                <h1 className="mt-5">Loading archive data...</h1>
-              </div>
-            </main>
+    return (
+      <section className="relative">
+        <div className="grid grid-cols-6 grid-rows-1 gap-12">
+          {/* Fixes nav to the left avoid overscroll */}
+          <div className="h-screen sticky top-0">
+            <Navbar />
           </div>
-        </section>
-      );
-    }
+          <main className="col-span-5">
+            {/* Positions topbar to be sticky at the top on scroll */}
+            <div className="sticky top-0 left-0 right-0 z-50 bg-white">
+              <Topbar />
+            </div>
+            {loading ? (
+              <Loading />
+            ) : error ? (
+              <Error />
+            ) : (
+              <div>
+                <div ref={componentRef}>
+                  <div className="printable-content">
+                    {/* Report Header */}
+                    <div className="flex justify-center font-bold">
+                      <img className="w-32" src={logo} alt="Logo" />
+                    </div>
+                    <div className="flex justify-center content-center gap-5 my-4 font-bold">
+                      <div className="flex flex-col gap-3">
+                        <h1 className="text-3xl uppercase underline">Ascend Pharmacy Utawala</h1>
+                        <div>Address: P.O BOX 86 - 0100, Nairobi Kenya</div>
+                        <div> Phone: +25470000000 | Email: ascendpharmacy@gmail.com</div>
+                        <h1 className="text-2xl">Inventory Report</h1>
+                        <hr />
+                        <p>Report date: {currentDateString.toString()} </p>
+                      </div>
+                    </div>
+                    <Table dataSource={filteredData} columns={columns} pagination={false} />
 
-    if (error) {
-      return (
-        <section className="relative">
-          <div className="grid grid-cols-6 grid-rows-1 gap-12">
-            {/* Fixes nav to the left avoid overscroll */}
-            <div className="h-screen sticky top-0">
-              <Navbar />
-            </div>
-            <main className="col-span-5">
-              {/* Positions topbar to be sticky at the top on scroll */}
-              <div className="sticky top-0 left-0 right-0 z-50 bg-white">
-                <Topbar />
-              </div>
-              <div className="h-screen flex flex-col items-center justify-center">
-                <div>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="1.5"
-                    stroke="currentColor"
-                    class="w-5 h-5 rtl:rotate-180"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18"
-                    />
-                  </svg>
-                </div>
-                <h1 className="mt-5">Oops! An error ocurred when retrieving archive data...</h1>
-              </div>
-            </main>
-          </div>
-        </section>
-      );
-    }
-    if (archive.length > 0) {
-      return (
-        <section className="relative">
-          <div className="grid grid-cols-6 grid-rows-1 gap-12">
-            {/* Fixes nav to the left avoid overscroll */}
-            <div className="h-screen sticky top-0">
-              <Navbar />
-            </div>
-            <main className="col-span-5">
-              {/* Positions topbar to be sticky at the top on scroll */}
-              <div className="sticky top-0 left-0 right-0 z-50 bg-white">
-                <Topbar />
-              </div>
-              <div ref={componentRef}>
-                <div className="printable-content">
-                  {/* Report Header */}
-                  <div className="flex justify-center font-bold">
-                    <img className="w-32" src={logo} alt="Logo" />
-                  </div>
-                  <div className="flex justify-center content-center gap-5 my-4 font-bold">
-                    <div className="flex flex-col gap-3">
-                      <h1 className="text-3xl uppercase underline">Ascend Pharmacy Utawala</h1>
-                      <div>Address: P.O BOX 86 - 0100, Nairobi Kenya</div>
-                      <div> Phone: +25470000000 | Email: ascendpharmacy@gmail.com</div>
-                      <h1 className="text-2xl">Inventory Report</h1>
-                      <hr />
-                      <p>Report date: {currentDateString.toString()} </p>
+                    {/* Report Footer */}
+                    <div className="my-5">
+                      <p className="text-xl flex justify-center">
+                        Ascend Pharmacy Utawala &copy; {currentDateString.split('-')[0]}
+                      </p>
                     </div>
                   </div>
-                  <Table dataSource={filteredData} columns={columns} pagination={false} />
-
-                  {/* Report Footer */}
-                  <div className="my-5">
-                    <p className="text-xl flex justify-center">
-                      Ascend Pharmacy Utawala &copy; {currentDateString.split('-')[0]}
-                    </p>
-                  </div>
+                  {/* <Table dataSource={filteredData} columns={columns} pagination={false} /> */}
                 </div>
-                {/* <Table dataSource={filteredData} columns={columns} pagination={false} /> */}
+                {/* PRINT DATA DIV */}
+                <div className="m-3">
+                  <p className="mb-3">Filter by archiveDate: </p>
+                  <RangePicker
+                    style={{ marginRight: 8 }}
+                    onChange={(dates) => {
+                      console.log(dates);
+                      if (dates && dates.length === 2) {
+                        setStartDate(dates[0].$d.toISOString());
+                        setEndDate(dates[1].$d.toISOString());
+                        console.log(startDate);
+                        console.log(endDate);
+                      }
+                    }}
+                  />
+                  <Button className="bg-indigo-600" type="primary" onClick={handleDateFilter}>
+                    Filter
+                  </Button>
+                  <Button onClick={clearDateFilter}>Reset</Button>
+                </div>
+                <div>
+                  <button
+                    onClick={() => {
+                      console.log('printed pdf');
+                      handlePrint();
+                    }}
+                    className="flex w-48 my-5 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  >
+                    Print report
+                  </button>
+                </div>
               </div>
-              {/* PRINT DATA DIV */}
-              <div className="m-3">
-                <p className="mb-3">Filter by archiveDate: </p>
-                <RangePicker
-                  style={{ marginRight: 8 }}
-                  onChange={(dates) => {
-                    console.log(dates);
-                    if (dates && dates.length === 2) {
-                      setStartDate(dates[0].$d.toISOString());
-                      setEndDate(dates[1].$d.toISOString());
-                      console.log(startDate);
-                      console.log(endDate);
-                    }
-                  }}
-                />
-                <Button className="bg-indigo-600" type="primary" onClick={handleDateFilter}>
-                  Filter
-                </Button>
-                <Button onClick={clearDateFilter}>Reset</Button>
-              </div>
-              <div>
-                <button
-                  onClick={() => {
-                    console.log('printed pdf');
-                    handlePrint();
-                  }}
-                  className="flex w-48 my-5 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                >
-                  Print report
-                </button>
-              </div>
-            </main>
-          </div>
-        </section>
-      );
-    }
+            )}
+            <Loading />
+          </main>
+        </div>
+      </section>
+    );
   }
 }
 
