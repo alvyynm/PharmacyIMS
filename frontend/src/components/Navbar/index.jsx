@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import { Navigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import { UserContext } from '../../context/UserContext';
 import { Link } from 'react-router-dom';
@@ -23,7 +24,7 @@ export default function index() {
     setIsLoggedIn(false);
 
     //redirect to login page
-    navigate('/login');
+    Navigate('/login');
   };
 
   // check if user is Admin
