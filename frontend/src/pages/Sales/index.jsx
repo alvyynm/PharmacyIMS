@@ -40,6 +40,7 @@ function index() {
   const currentDate = new Date();
   const currentMonth = currentDate.getMonth() + 1; // Months are zero-based, so add 1
   const currentYear = currentDate.getFullYear();
+  const currentMonthName = currentDate.toLocaleString('default', { month: 'long' });
   let totalSales = 0;
   let totalDailySales = 0;
   let totalMonthlySales = 0;
