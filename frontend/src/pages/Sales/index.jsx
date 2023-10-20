@@ -203,17 +203,17 @@ function index() {
                   <Row gutter={16}>
                     <Col span={8}>
                       <Card title="Total Sales" bordered={false}>
-                        {totalSales}
+                        KES {totalSales.toLocaleString()}
                       </Card>
                     </Col>
                     <Col span={8}>
                       <Card title="Monthly Sales" bordered={false}>
-                        {totalMonthlySales}
+                        KES {totalMonthlySales.toLocaleString()}
                       </Card>
                     </Col>
                     <Col span={8}>
                       <Card title="Today's Sales" bordered={false}>
-                        {totalDailySales}
+                        KES {totalDailySales.toLocaleString()}
                       </Card>
                     </Col>
                   </Row>
