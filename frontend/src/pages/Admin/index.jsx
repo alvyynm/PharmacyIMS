@@ -6,6 +6,8 @@ import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { toast } from 'react-toastify';
 import Navbar from '../../components/Navbar';
 import Topbar from '../../components/Topbar';
+import Loading from '../../components/Loading';
+import Error from '../../components/Error';
 import { AuthContext } from '../../context/AuthContext';
 import { UsersContext } from '../../context/UsersContext';
 
@@ -167,49 +169,24 @@ function index() {
     //redirect to login page if unauthenticated
     return <Navigate replace to="/login" />;
   } else {
-    if (loading) {
-      return (
-        <section className="relative">
-          <div className="grid grid-cols-6 grid-rows-1 gap-12">
-            {/* Fixes nav to the left avoid overscroll */}
-            <div className="h-screen sticky top-0">
-              <Navbar />
-            </div>
-            <main className="col-span-5">
-              {/* Positions topbar to be sticky at the top on scroll */}
-              <div className="sticky top-0 left-0 right-0 z-50 bg-white">
-                <Topbar />
-              </div>
-              <div className="h-screen flex flex-col items-center justify-center">
-                <div
-                  className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
-                  role="status"
-                >
-                  <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
-                    Loading...
-                  </span>
-                </div>
-                <h1 className="mt-5">Loading users data...</h1>
-              </div>
-            </main>
+    // if (loading) {
+    return (
+      <section className="relative">
+        <div className="grid grid-cols-6 grid-rows-1 gap-12">
+          {/* Fixes nav to the left avoid overscroll */}
+          <div className="h-screen sticky top-0">
+            <Navbar />
           </div>
-        </section>
-      );
-    }
-
-    if (status) {
-      return (
-        <section className="relative">
-          <div className="grid grid-cols-6 grid-rows-1 gap-12">
-            {/* Fixes nav to the left avoid overscroll */}
-            <div className="h-screen sticky top-0">
-              <Navbar />
+          <main className="col-span-5">
+            {/* Positions topbar to be sticky at the top on scroll */}
+            <div className="sticky top-0 left-0 right-0 z-50 bg-white">
+              <Topbar />
             </div>
-            <main className="col-span-5">
-              {/* Positions topbar to be sticky at the top on scroll */}
-              <div className="sticky top-0 left-0 right-0 z-50 bg-white">
-                <Topbar />
-              </div>
+            {loading ? (
+              // loading state
+              <Loading />
+            ) : status ? (
+              // if user is not an admin
               <div className="h-screen flex flex-col items-center justify-center">
                 <div>
                   <svg
@@ -239,188 +216,374 @@ function index() {
                   </Link>
                 </div>
               </div>
-            </main>
-          </div>
-        </section>
-      );
-    }
-
-    if (error) {
-      return (
-        <section className="relative">
-          <div className="grid grid-cols-6 grid-rows-1 gap-12">
-            {/* Fixes nav to the left avoid overscroll */}
-            <div className="h-screen sticky top-0">
-              <Navbar />
-            </div>
-            <main className="col-span-5">
-              {/* Positions topbar to be sticky at the top on scroll */}
-              <div className="sticky top-0 left-0 right-0 z-50 bg-white">
-                <Topbar />
-              </div>
-              <div className="h-screen flex flex-col items-center justify-center">
-                <div>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="1.5"
-                    stroke="currentColor"
-                    class="w-5 h-5 rtl:rotate-180"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18"
+            ) : error ? (
+              // error message if api call fails
+              <Error />
+            ) : (
+              <div>
+                <h1 className="my-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+                  Employee List
+                </h1>
+                <div className="flex justify-between mb-4">
+                  <div>
+                    <Input.Search
+                      onSearch={(value) => {
+                        setSearchTerm(value);
+                      }}
+                      placeholder="Search for employee"
+                      // style={{ borderRadius: '0.5rem', display: 'block' }}
                     />
-                  </svg>
-                </div>
-                <h1 className="mt-5">Oops! An error ocurred when retrieving archive data...</h1>
-              </div>
-            </main>
-          </div>
-        </section>
-      );
-    }
-    if (users.length > 0) {
-      return (
-        <section className="relative">
-          <div className="grid grid-cols-6 grid-rows-1 gap-12">
-            {/* Fixes nav to the left avoid overscroll */}
-            <div className="h-screen sticky top-0">
-              <Navbar />
-            </div>
-            <main className="col-span-5">
-              {/* Positions topbar to be sticky at the top on scroll */}
-              <div className="sticky top-0 left-0 right-0 z-50 bg-white">
-                <Topbar />
-              </div>
-              <h1 className="my-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-                Employee List
-              </h1>
-              <div className="flex justify-between mb-4">
-                <div>
-                  <Input.Search
-                    onSearch={(value) => {
-                      setSearchTerm(value);
+                  </div>
+                  <button
+                    onClick={() => {
+                      setIsAddModalOpen(true);
                     }}
-                    placeholder="Search for employee"
-                    // style={{ borderRadius: '0.5rem', display: 'block' }}
-                  />
+                    className="flex w-48 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  >
+                    Add new employee
+                  </button>
                 </div>
-                <button
-                  onClick={() => {
-                    setIsAddModalOpen(true);
+                <Table dataSource={users} columns={columns} pagination={false} />
+                <Modal
+                  title="Edit Details"
+                  open={isModalOpen}
+                  okText="Save"
+                  onCancel={() => ResetEditing()}
+                  onOk={() => {
+                    setUsers((pre) => {
+                      return pre.map((employee) => {
+                        console.log('Employee data:', employee);
+                        console.log('Edited data:', edit);
+                        if (employee._id === edit._id) {
+                          // call the api and update the record in the database
+
+                          handleUpdate(edit);
+                          console.log('Updated employee:', edit);
+                          return edit;
+                        } else {
+                          return employee;
+                        }
+                      });
+                    });
+                    ResetEditing();
                   }}
-                  className="flex w-48 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 >
-                  Add new employee
-                </button>
+                  <Input
+                    addonBefore=<p>User Name: </p>
+                    value={edit?.name}
+                    onChange={(e) => {
+                      setEdit((pre) => {
+                        return { ...pre, name: e.target.value };
+                      });
+                    }}
+                    className="mb-3 rounded-lg"
+                  />
+                  <Input
+                    addonBefore=<p>User Email: </p>
+                    value={edit?.email}
+                    onChange={(e) => {
+                      setEdit((pre) => {
+                        return { ...pre, email: e.target.value };
+                      });
+                    }}
+                    className="mb-3 rounded-lg"
+                  />
+                  <Space>
+                    <p>User Role: </p>
+
+                    <Select
+                      value={edit?.role}
+                      style={{
+                        width: 120,
+                      }}
+                      onChange={(e) => {
+                        setEdit((pre) => {
+                          return { ...pre, role: e };
+                        });
+                      }}
+                      options={[
+                        {
+                          value: 'USER',
+                          label: 'USER',
+                        },
+                        {
+                          value: 'ADMIN',
+                          label: 'ADMIN',
+                        },
+                      ]}
+                    />
+
+                    <p>User Status: </p>
+                    <Select
+                      value={edit?.status}
+                      style={{
+                        width: 180,
+                      }}
+                      onChange={(e) => {
+                        setEdit((pre) => {
+                          return { ...pre, status: e };
+                        });
+                      }}
+                      options={[
+                        {
+                          value: 'ACTIVE',
+                          label: 'ACTIVE',
+                        },
+                        {
+                          value: 'INACTIVE',
+                          label: 'INACTIVE',
+                        },
+                        {
+                          value: 'PENDING_APPROVAL',
+                          label: 'PENDING_APPROVAL',
+                        },
+                      ]}
+                    />
+                  </Space>
+                </Modal>
               </div>
-              <Table dataSource={users} columns={columns} pagination={false} />
-              <Modal
-                title="Edit Details"
-                open={isModalOpen}
-                okText="Save"
-                onCancel={() => ResetEditing()}
-                onOk={() => {
-                  setUsers((pre) => {
-                    return pre.map((employee) => {
-                      console.log('Employee data:', employee);
-                      console.log('Edited data:', edit);
-                      if (employee._id === edit._id) {
-                        // call the api and update the record in the database
-
-                        handleUpdate(edit);
-                        console.log('Updated employee:', edit);
-                        return edit;
-                      } else {
-                        return employee;
-                      }
-                    });
-                  });
-                  ResetEditing();
-                }}
-              >
-                <Input
-                  addonBefore=<p>User Name: </p>
-                  value={edit?.name}
-                  onChange={(e) => {
-                    setEdit((pre) => {
-                      return { ...pre, name: e.target.value };
-                    });
-                  }}
-                  className="mb-3 rounded-lg"
-                />
-                <Input
-                  addonBefore=<p>User Email: </p>
-                  value={edit?.email}
-                  onChange={(e) => {
-                    setEdit((pre) => {
-                      return { ...pre, email: e.target.value };
-                    });
-                  }}
-                  className="mb-3 rounded-lg"
-                />
-                <Space>
-                  <p>User Role: </p>
-
-                  <Select
-                    value={edit?.role}
-                    style={{
-                      width: 120,
-                    }}
-                    onChange={(e) => {
-                      setEdit((pre) => {
-                        return { ...pre, role: e };
-                      });
-                    }}
-                    options={[
-                      {
-                        value: 'USER',
-                        label: 'USER',
-                      },
-                      {
-                        value: 'ADMIN',
-                        label: 'ADMIN',
-                      },
-                    ]}
-                  />
-
-                  <p>User Status: </p>
-                  <Select
-                    value={edit?.status}
-                    style={{
-                      width: 180,
-                    }}
-                    onChange={(e) => {
-                      setEdit((pre) => {
-                        return { ...pre, status: e };
-                      });
-                    }}
-                    options={[
-                      {
-                        value: 'ACTIVE',
-                        label: 'ACTIVE',
-                      },
-                      {
-                        value: 'INACTIVE',
-                        label: 'INACTIVE',
-                      },
-                      {
-                        value: 'PENDING_APPROVAL',
-                        label: 'PENDING_APPROVAL',
-                      },
-                    ]}
-                  />
-                </Space>
-              </Modal>
-            </main>
-          </div>
-        </section>
-      );
-    }
+            )}
+            {/* <div className="h-screen flex flex-col items-center justify-center">
+                <div
+                  className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+                  role="status"
+                >
+                  <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
+                    Loading...
+                  </span>
+                </div>
+                <h1 className="mt-5">Loading users data...</h1>
+              </div> */}
+          </main>
+        </div>
+      </section>
+    );
   }
+
+  //   if (status) {
+  //     return (
+  //       <section className="relative">
+  //         <div className="grid grid-cols-6 grid-rows-1 gap-12">
+  //           {/* Fixes nav to the left avoid overscroll */}
+  //           <div className="h-screen sticky top-0">
+  //             <Navbar />
+  //           </div>
+  //           <main className="col-span-5">
+  //             {/* Positions topbar to be sticky at the top on scroll */}
+  //             <div className="sticky top-0 left-0 right-0 z-50 bg-white">
+  //               <Topbar />
+  //             </div>
+  //             <div className="h-screen flex flex-col items-center justify-center">
+  //               <div>
+  //                 <svg
+  //                   xmlns="http://www.w3.org/2000/svg"
+  //                   fill="none"
+  //                   viewBox="0 0 24 24"
+  //                   stroke-width="1.5"
+  //                   stroke="currentColor"
+  //                   class="w-5 h-5 rtl:rotate-180"
+  //                 >
+  //                   <path
+  //                     stroke-linecap="round"
+  //                     stroke-linejoin="round"
+  //                     d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18"
+  //                   />
+  //                 </svg>
+  //               </div>
+  //               <h1 className="my-5">
+  //                 You don't have permission, please contact your admin for assistance
+  //               </h1>
+  //               <div>
+  //                 <Link to={'/dashboard'}>
+  //                   {' '}
+  //                   <button className="flex w-48 justify-center rounded-md mb-4 bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+  //                     Go to dashboard
+  //                   </button>
+  //                 </Link>
+  //               </div>
+  //             </div>
+  //           </main>
+  //         </div>
+  //       </section>
+  //     );
+  //   }
+
+  //   // if (error) {
+  //   //   return (
+  //   //     <section className="relative">
+  //   //       <div className="grid grid-cols-6 grid-rows-1 gap-12">
+  //   //         {/* Fixes nav to the left avoid overscroll */}
+  //   //         <div className="h-screen sticky top-0">
+  //   //           <Navbar />
+  //   //         </div>
+  //   //         <main className="col-span-5">
+  //   //           {/* Positions topbar to be sticky at the top on scroll */}
+  //   //           <div className="sticky top-0 left-0 right-0 z-50 bg-white">
+  //   //             <Topbar />
+  //   //           </div>
+  //   //           <div className="h-screen flex flex-col items-center justify-center">
+  //   //             <div>
+  //   //               <svg
+  //   //                 xmlns="http://www.w3.org/2000/svg"
+  //   //                 fill="none"
+  //   //                 viewBox="0 0 24 24"
+  //   //                 stroke-width="1.5"
+  //   //                 stroke="currentColor"
+  //   //                 class="w-5 h-5 rtl:rotate-180"
+  //   //               >
+  //   //                 <path
+  //   //                   stroke-linecap="round"
+  //   //                   stroke-linejoin="round"
+  //   //                   d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18"
+  //   //                 />
+  //   //               </svg>
+  //   //             </div>
+  //   //             <h1 className="mt-5">Oops! An error ocurred when retrieving archive data...</h1>
+  //   //           </div>
+  //   //         </main>
+  //   //       </div>
+  //   //     </section>
+  //   //   );
+  //   // }
+  //   if (users.length > 0) {
+  //     return (
+  //       <section className="relative">
+  //         <div className="grid grid-cols-6 grid-rows-1 gap-12">
+  //           {/* Fixes nav to the left avoid overscroll */}
+  //           <div className="h-screen sticky top-0">
+  //             <Navbar />
+  //           </div>
+  //           <main className="col-span-5">
+  //             {/* Positions topbar to be sticky at the top on scroll */}
+  //             <div className="sticky top-0 left-0 right-0 z-50 bg-white">
+  //               <Topbar />
+  //             </div>
+  //             <h1 className="my-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+  //               Employee List
+  //             </h1>
+  //             <div className="flex justify-between mb-4">
+  //               <div>
+  //                 <Input.Search
+  //                   onSearch={(value) => {
+  //                     setSearchTerm(value);
+  //                   }}
+  //                   placeholder="Search for employee"
+  //                   // style={{ borderRadius: '0.5rem', display: 'block' }}
+  //                 />
+  //               </div>
+  //               <button
+  //                 onClick={() => {
+  //                   setIsAddModalOpen(true);
+  //                 }}
+  //                 className="flex w-48 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+  //               >
+  //                 Add new employee
+  //               </button>
+  //             </div>
+  //             <Table dataSource={users} columns={columns} pagination={false} />
+  //             <Modal
+  //               title="Edit Details"
+  //               open={isModalOpen}
+  //               okText="Save"
+  //               onCancel={() => ResetEditing()}
+  //               onOk={() => {
+  //                 setUsers((pre) => {
+  //                   return pre.map((employee) => {
+  //                     console.log('Employee data:', employee);
+  //                     console.log('Edited data:', edit);
+  //                     if (employee._id === edit._id) {
+  //                       // call the api and update the record in the database
+
+  //                       handleUpdate(edit);
+  //                       console.log('Updated employee:', edit);
+  //                       return edit;
+  //                     } else {
+  //                       return employee;
+  //                     }
+  //                   });
+  //                 });
+  //                 ResetEditing();
+  //               }}
+  //             >
+  //               <Input
+  //                 addonBefore=<p>User Name: </p>
+  //                 value={edit?.name}
+  //                 onChange={(e) => {
+  //                   setEdit((pre) => {
+  //                     return { ...pre, name: e.target.value };
+  //                   });
+  //                 }}
+  //                 className="mb-3 rounded-lg"
+  //               />
+  //               <Input
+  //                 addonBefore=<p>User Email: </p>
+  //                 value={edit?.email}
+  //                 onChange={(e) => {
+  //                   setEdit((pre) => {
+  //                     return { ...pre, email: e.target.value };
+  //                   });
+  //                 }}
+  //                 className="mb-3 rounded-lg"
+  //               />
+  //               <Space>
+  //                 <p>User Role: </p>
+
+  //                 <Select
+  //                   value={edit?.role}
+  //                   style={{
+  //                     width: 120,
+  //                   }}
+  //                   onChange={(e) => {
+  //                     setEdit((pre) => {
+  //                       return { ...pre, role: e };
+  //                     });
+  //                   }}
+  //                   options={[
+  //                     {
+  //                       value: 'USER',
+  //                       label: 'USER',
+  //                     },
+  //                     {
+  //                       value: 'ADMIN',
+  //                       label: 'ADMIN',
+  //                     },
+  //                   ]}
+  //                 />
+
+  //                 <p>User Status: </p>
+  //                 <Select
+  //                   value={edit?.status}
+  //                   style={{
+  //                     width: 180,
+  //                   }}
+  //                   onChange={(e) => {
+  //                     setEdit((pre) => {
+  //                       return { ...pre, status: e };
+  //                     });
+  //                   }}
+  //                   options={[
+  //                     {
+  //                       value: 'ACTIVE',
+  //                       label: 'ACTIVE',
+  //                     },
+  //                     {
+  //                       value: 'INACTIVE',
+  //                       label: 'INACTIVE',
+  //                     },
+  //                     {
+  //                       value: 'PENDING_APPROVAL',
+  //                       label: 'PENDING_APPROVAL',
+  //                     },
+  //                   ]}
+  //                 />
+  //               </Space>
+  //             </Modal>
+  //           </main>
+  //         </div>
+  //       </section>
+  //     );
+  //   }
+  // }
 }
 
 export default index;
