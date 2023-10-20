@@ -12,6 +12,7 @@ import archiveIcon from '../../assets/icons/archive.svg';
 import settingsIcon from '../../assets/icons/setting.svg';
 import logoutIcon from '../../assets/icons/logout.svg';
 import salesIcon from '../../assets/icons/salesicon.png';
+import assetsIcon from '../../assets/icons/steering.svg';
 
 export default function index() {
   const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
