@@ -203,19 +203,15 @@ function index() {
                 <div className="my-4">
                   <Row gutter={16}>
                     <Col span={8}>
-                      <Card title="Total Sales" bordered={false}>
-                        KES {totalSales.toLocaleString()}
-                      </Card>
+                      <Card title="Total Sales">KES {totalSales.toLocaleString()}</Card>
                     </Col>
                     <Col span={8}>
-                      <Card title={`${currentMonthName} Sales`} bordered={false}>
+                      <Card title={`${currentMonthName} Sales`}>
                         KES {totalMonthlySales.toLocaleString()}
                       </Card>
                     </Col>
                     <Col span={8}>
-                      <Card title="Today's Sales" bordered={false}>
-                        KES {totalDailySales.toLocaleString()}
-                      </Card>
+                      <Card title="Today's Sales">KES {totalDailySales.toLocaleString()}</Card>
                     </Col>
                   </Row>
                 </div>
