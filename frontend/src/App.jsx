@@ -5,6 +5,7 @@ import { UserContext } from './context/UserContext';
 import { DataContext } from './context/DataContext';
 import { ArchiveContext } from './context/ArchiveContext';
 import { UsersContext } from './context/UsersContext';
+import { SalesContext } from './context/SalesContext';
 
 import './App.css';
 import '@tremor/react/dist/esm/tremor.css';
@@ -30,6 +31,7 @@ function App() {
   const [inventory, setInventory] = useState(null);
   const [archive, setArchive] = useState(null);
   const [users, setUsers] = useState(null);
+  const [sales, setSales] = useState(null);
 
   return (
     <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn }}>
@@ -37,31 +39,33 @@ function App() {
         <DataContext.Provider value={{ inventory, setInventory }}>
           <ArchiveContext.Provider value={{ archive, setArchive }}>
             <UsersContext.Provider value={{ users, setUsers }}>
-              <BrowserRouter>
-                <ToastContainer />
-                <Routes>
-                  <Route path="/" element={<Login />}></Route>
-                  <Route
-                    path="/login"
-                    element={
-                      <div className="font-primary">
-                        <Login />
-                      </div>
-                    }
-                  ></Route>
-                  <Route path="/dashboard" element={<Dashboard />}></Route>
-                  <Route path="/settings" element={<Settings />}></Route>
-                  <Route path="/signup" element={<Signup />}></Route>
-                  <Route path="/reports" element={<Reports />}></Route>
-                  <Route path="/admin" element={<Admin />}></Route>
-                  <Route path="/sales" element={<Sales />}></Route>
-                  <Route path="/archive" element={<Archive />}></Route>
-                  <Route path="/requestpasswordreset" element={<PasswordResetRequest />}></Route>
-                  <Route path="passwordresetemail" element={<ResetEmailSend />}></Route>
-                  <Route path="passwordReset" element={<PasswordReset />}></Route>
-                  <Route path="*" element={<Error />}></Route>
-                </Routes>
-              </BrowserRouter>
+              <SalesContext.Provider value={{ sales, setSales }}>
+                <BrowserRouter>
+                  <ToastContainer />
+                  <Routes>
+                    <Route path="/" element={<Login />}></Route>
+                    <Route
+                      path="/login"
+                      element={
+                        <div className="font-primary">
+                          <Login />
+                        </div>
+                      }
+                    ></Route>
+                    <Route path="/dashboard" element={<Dashboard />}></Route>
+                    <Route path="/settings" element={<Settings />}></Route>
+                    <Route path="/signup" element={<Signup />}></Route>
+                    <Route path="/reports" element={<Reports />}></Route>
+                    <Route path="/admin" element={<Admin />}></Route>
+                    <Route path="/sales" element={<Sales />}></Route>
+                    <Route path="/archive" element={<Archive />}></Route>
+                    <Route path="/requestpasswordreset" element={<PasswordResetRequest />}></Route>
+                    <Route path="passwordresetemail" element={<ResetEmailSend />}></Route>
+                    <Route path="passwordReset" element={<PasswordReset />}></Route>
+                    <Route path="*" element={<Error />}></Route>
+                  </Routes>
+                </BrowserRouter>
+              </SalesContext.Provider>
             </UsersContext.Provider>
           </ArchiveContext.Provider>
         </DataContext.Provider>
