@@ -58,6 +58,11 @@ function index() {
       dataIndex: 'quantity',
     },
     {
+      key: 'saleValue',
+      title: 'Sale Value',
+      dataIndex: 'saleValue',
+    },
+    {
       key: 'saleDate',
       title: 'Sale Date',
       dataIndex: 'saleDate',
