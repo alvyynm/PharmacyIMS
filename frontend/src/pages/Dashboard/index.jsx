@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Navigate } from 'react-router-dom';
-import { data } from '../../data/Data';
 import { Table, Modal, Input, Button, Form, DatePicker } from 'antd';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import axios from 'axios';
@@ -8,11 +7,12 @@ import { toast } from 'react-toastify';
 import moment from 'moment';
 import Navbar from '../../components/Navbar';
 import Topbar from '../../components/Topbar';
+import Loading from '../../components/Loading';
+import Error from '../../components/Error';
 import { AuthContext } from '../../context/AuthContext';
 import { DataContext } from '../../context/DataContext';
 
 function index() {
-  const [Data, setData] = useState(data);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [edit, setEdit] = useState(null);
@@ -315,370 +315,303 @@ function index() {
     //redirect to login page if unauthenticated
     return <Navigate replace to="/login" />;
   } else {
-    if (loading) {
-      return (
-        <section className="relative">
-          <div className="grid grid-cols-6 grid-rows-1 gap-12">
-            {/* Fixes nav to the left avoid overscroll */}
-            <div className="h-screen sticky top-0">
-              <Navbar />
-            </div>
-            <main className="col-span-5">
-              {/* Positions topbar to be sticky at the top on scroll */}
-              <div className="sticky top-0 left-0 right-0 z-50 bg-white">
-                <Topbar />
-              </div>
-              <div className="h-screen flex flex-col items-center justify-center">
-                <div
-                  className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
-                  role="status"
-                >
-                  <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
-                    Loading...
-                  </span>
-                </div>
-                <h1 className="mt-5">Loading inventory data...</h1>
-              </div>
-            </main>
+    // if (loading) {
+    return (
+      <section className="relative">
+        <div className="grid grid-cols-6 grid-rows-1 gap-12">
+          {/* Fixes nav to the left avoid overscroll */}
+          <div className="h-screen sticky top-0">
+            <Navbar />
           </div>
-        </section>
-      );
-    }
-
-    if (error) {
-      return (
-        <section className="relative">
-          <div className="grid grid-cols-6 grid-rows-1 gap-12">
-            {/* Fixes nav to the left avoid overscroll */}
-            <div className="h-screen sticky top-0">
-              <Navbar />
+          <main className="col-span-5">
+            {/* Positions topbar to be sticky at the top on scroll */}
+            <div className="sticky top-0 left-0 right-0 z-50 bg-white">
+              <Topbar />
             </div>
-            <main className="col-span-5">
-              {/* Positions topbar to be sticky at the top on scroll */}
-              <div className="sticky top-0 left-0 right-0 z-50 bg-white">
-                <Topbar />
-              </div>
-              <div className="h-screen flex flex-col items-center justify-center">
-                <div>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="1.5"
-                    stroke="currentColor"
-                    class="w-5 h-5 rtl:rotate-180"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18"
-                    />
-                  </svg>
-                </div>
-                <h1 className="mt-5">Oops! An error ocurred when retrieving inventory data...</h1>
-              </div>
-            </main>
-          </div>
-        </section>
-      );
-    }
-
-    if (inventory) {
-      console.log(inventory);
-      return (
-        <section className="relative">
-          <div className="grid grid-cols-6 grid-rows-1 gap-12">
-            {/* Fixes nav to the left avoid overscroll */}
-            <div className="h-screen sticky top-0">
-              <Navbar />
-            </div>
-            <main className="col-span-5">
-              {/* Positions topbar to be sticky at the top on scroll */}
-              <div className="sticky top-0 left-0 right-0 z-50 bg-white">
-                <Topbar />
-              </div>
-              <div className="flex gap-4 justify-center mt-3">
-                <div className=" flex flex-col justify-evenly place-items-center bg-gray-300 w-64 h-20 rounded-2xl">
-                  <div>
-                    <h3 className="text-custom-black font-bold text-sm">Available Drugs</h3>
-                  </div>
-                  <div>
-                    <p>{Object.keys(inventory).length}</p>
-                  </div>
-                </div>
-                <div className=" flex flex-col justify-evenly place-items-center bg-gray-300 w-64 h-20 rounded-2xl">
-                  <div>
-                    <h3 className="text-custom-black font-bold text-sm">Stock Value</h3>
-                  </div>
-                  <div>
-                    <p>KES {totalUnitPrice.toLocaleString()}</p>
-                  </div>
-                </div>
-                <div className=" flex flex-col justify-evenly place-items-center bg-gray-300 w-72 h-20 rounded-2xl">
-                  <div>
-                    <h3 className="text-custom-black font-bold text-sm">Total Units Available</h3>
-                  </div>
-                  <div>
-                    <p>{totalQuantityInStock.toLocaleString()}</p>
-                  </div>
-                </div>
-                {/* <div className=" flex flex-col justify-evenly place-items-center bg-gray-300 w-72 h-20 rounded-2xl">
-                  <div>
-                    <h3 className="text-custom-black font-bold text-sm">Monthly Sales</h3>
-                  </div>
-                  <div>
-                    <p>KES {totalUnitPrice.toLocaleString()}</p>
-                  </div>
-                </div> */}
-              </div>
-              <div className="flex justify-between mb-4 mt-6">
-                <div>
-                  <Input.Search
-                    onSearch={(value) => {
-                      setSearchTerm(value);
-                    }}
-                    placeholder="Search for drugs"
-                    // style={{ borderRadius: '0.5rem', display: 'block' }}
-                  />
-                </div>
-                <button
-                  onClick={() => {
-                    setIsAddModalOpen(true);
-                  }}
-                  className="flex w-48 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                >
-                  Add new record
-                </button>
-              </div>
-
+            {loading ? (
+              // loading state
+              <Loading />
+            ) : error ? (
+              // error message if api call fails
+              <Error />
+            ) : (
               <div>
-                <Table
-                  dataSource={inventory}
-                  columns={columns}
-                  pagination={{ pageSize: 9, total: 50, showSizeChanger: false }}
-                  rowKey={(record) => record._id}
-                />
-              </div>
-
-              {/* Edit record modal */}
-              <Modal
-                title="Edit Details"
-                open={isModalOpen}
-                okText="Save"
-                onCancel={() => ResetEditing()}
-                onOk={() => {
-                  setInventory((pre) => {
-                    return pre.map((record) => {
-                      if (record._id === edit._id) {
-                        console.log(record);
-                        console.log(edit);
-                        // call the api and update the record
-                        handleUpdate(edit);
-                        return edit;
-                      } else {
-                        return record;
-                      }
-                    });
-                  });
-                  ResetEditing();
-                }}
-                footer={[
-                  <Button key="cancel" onClick={ResetEditing}>
-                    Cancel
-                  </Button>,
-                  <Button
-                    className="bg-indigo-600"
-                    key="submit"
-                    type="primary"
-                    loading={modalLoading}
+                {/*START*/}
+                <div className="flex gap-4 justify-center mt-3">
+                  <div className=" flex flex-col justify-evenly place-items-center bg-gray-300 w-64 h-20 rounded-2xl">
+                    <div>
+                      <h3 className="text-custom-black font-bold text-sm">Available Drugs</h3>
+                    </div>
+                    <div>
+                      <p>{Object.keys(inventory).length}</p>
+                    </div>
+                  </div>
+                  <div className=" flex flex-col justify-evenly place-items-center bg-gray-300 w-64 h-20 rounded-2xl">
+                    <div>
+                      <h3 className="text-custom-black font-bold text-sm">Stock Value</h3>
+                    </div>
+                    <div>
+                      <p>KES {totalUnitPrice.toLocaleString()}</p>
+                    </div>
+                  </div>
+                  <div className=" flex flex-col justify-evenly place-items-center bg-gray-300 w-72 h-20 rounded-2xl">
+                    <div>
+                      <h3 className="text-custom-black font-bold text-sm">Total Units Available</h3>
+                    </div>
+                    <div>
+                      <p>{totalQuantityInStock.toLocaleString()}</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex justify-between mb-4 mt-6">
+                  <div>
+                    <Input.Search
+                      onSearch={(value) => {
+                        setSearchTerm(value);
+                      }}
+                      placeholder="Search for drugs"
+                      // style={{ borderRadius: '0.5rem', display: 'block' }}
+                    />
+                  </div>
+                  <button
                     onClick={() => {
-                      setInventory((pre) => {
-                        return pre.map((record) => {
-                          if (record._id === edit._id) {
-                            console.log(record);
-                            console.log(edit);
-                            // call the api and update the record
-                            handleUpdate(edit);
-                            return edit;
-                          } else {
-                            return record;
-                          }
-                        });
-                      });
-                      ResetEditing();
+                      setIsAddModalOpen(true);
                     }}
+                    className="flex w-48 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                   >
-                    Save
-                  </Button>,
-                ]}
-              >
-                <Form form={form}>
-                  <label htmlFor="name">Name</label>
-                  <Input
-                    id="name"
-                    value={edit?.name}
-                    onChange={(e) => {
-                      setEdit((pre) => {
-                        return { ...pre, name: e.target.value };
-                      });
-                    }}
-                    className="mb-3 rounded-lg"
-                  />
-                  <label htmlFor="category">Category</label>
-                  <Input
-                    id="category"
-                    value={edit?.category}
-                    onChange={(e) => {
-                      setEdit((pre) => {
-                        return { ...pre, category: e.target.value };
-                      });
-                    }}
-                    className="mb-3 rounded-lg"
-                  />
-                  <label htmlFor="unitPrice">Price</label>
-                  <Input
-                    id="unitPrice"
-                    value={edit?.unitPrice}
-                    onChange={(e) => {
-                      setEdit((pre) => {
-                        return { ...pre, unitPrice: e.target.value };
-                      });
-                    }}
-                    className="mb-3 rounded-lg"
-                  />
-                  <label htmlFor="quantityInStock">Quantity in Stock</label>
-                  <Input
-                    id="quantityInStock"
-                    value={edit?.quantityInStock}
-                    onChange={(e) => {
-                      setEdit((pre) => {
-                        return { ...pre, quantityInStock: e.target.value };
-                      });
-                    }}
-                    className="mb-3 rounded-lg"
-                  />
-                  <label htmlFor="shelfNumber">Shelf Number</label>
-                  <Input
-                    id="shelfNumber"
-                    value={edit?.shelfNumber}
-                    onChange={(e) => {
-                      setEdit((pre) => {
-                        return { ...pre, shelfNumber: e.target.value };
-                      });
-                    }}
-                    className="mb-3 rounded-lg"
-                  />
-                  <Form.Item name="orderDate" label="Order Date" rules={[{ required: true }]}>
-                    <DatePicker
-                      picker="date"
-                      onChange={(date, dateString) => {
-                        console.log(date);
-                        const dateT = date?.$d.toISOString();
-                        console.log(`Order date: `, dateT);
-                      }}
-                    />
-                    {selectedOrderDate && <p>Selected Date: {selectedOrderDate}</p>}
-                  </Form.Item>
-                  <Form.Item name="expiryDate" label="Expiry Date" rules={[{ required: true }]}>
-                    <DatePicker
-                      picker="date"
-                      disabledDate={disabledDate}
-                      onChange={(date, dateString) => {
-                        console.log(dateString);
-                        const dateT = date?.$d.toISOString();
-                        console.log(dateT);
-                      }}
-                    />
-                    {selectedMonth && <p>Selected Month: {selectedMonth}</p>}
-                  </Form.Item>
-                </Form>
-              </Modal>
+                    Add new record
+                  </button>
+                </div>
 
-              {/* Add record modal */}
-              <Modal
-                title="Add new record"
-                open={isAddModalOpen}
-                okText="Save record"
-                onCancel={() => onCancelAdd()}
-                onOk={() => {
-                  onAddRecord();
-                  onCancelAdd();
-                }}
-                footer={[
-                  <Button key="cancel" onClick={onCancelAdd}>
-                    Cancel
-                  </Button>,
-                  <Button
-                    className="bg-indigo-600"
-                    key="submit"
-                    type="primary"
-                    loading={modalLoading}
-                    onClick={onAddRecord}
-                  >
-                    Submit
-                  </Button>,
-                ]}
-              >
-                <Form form={form}>
-                  <Form.Item name="name" label="Name" rules={[{ required: true }]}>
-                    <Input />
-                  </Form.Item>
-                  <Form.Item name="category" label="Category" rules={[{ required: true }]}>
-                    <Input />
-                  </Form.Item>
-                  <Form.Item name="unitPrice" label="Unit Price" rules={[{ required: true }]}>
-                    <Input />
-                  </Form.Item>
-                  <Form.Item
-                    name="quantityInStock"
-                    label="Quantity In Stock"
-                    rules={[{ required: true }]}
-                  >
-                    <Input />
-                  </Form.Item>
-                  <Form.Item name="shelfNumber" label="Shelf Number" rules={[{ required: true }]}>
-                    <Input />
-                  </Form.Item>
-                  <Form.Item name="orderDate" label="Order Date" rules={[{ required: true }]}>
-                    <DatePicker
-                      picker="date"
-                      onChange={(date, dateString) => {
-                        console.log(dateString);
-                        const dateT = date.$d.toISOString();
-                        console.log(`Order date: `, dateT);
-                      }}
-                    />
-                    {selectedOrderDate && <p>Selected Date: {selectedOrderDate}</p>}
-                  </Form.Item>
-                  <Form.Item name="expiryDate" label="Expiry Date" rules={[{ required: true }]}>
-                    <DatePicker
-                      picker="date"
-                      disabledDate={disabledDate}
-                      onChange={(date, dateString) => {
-                        console.log(dateString);
-                        const dateT = date.$d.toISOString();
-                        console.log(dateT);
-                      }}
-                    />
-                    {selectedMonth && <p>Selected Month: {selectedMonth}</p>}
-                  </Form.Item>
-                </Form>
-              </Modal>
-              <div>
-                <button
-                  onClick={() => {
-                    setIsAddModalOpen(true);
+                <div>
+                  <Table
+                    dataSource={inventory}
+                    columns={columns}
+                    pagination={{ pageSize: 9, total: 50, showSizeChanger: false }}
+                    rowKey={(record) => record._id}
+                  />
+                </div>
+
+                {/* Edit record modal */}
+                <Modal
+                  title="Edit Details"
+                  open={isModalOpen}
+                  okText="Save"
+                  onCancel={() => ResetEditing()}
+                  onOk={() => {
+                    setInventory((pre) => {
+                      return pre.map((record) => {
+                        if (record._id === edit._id) {
+                          console.log(record);
+                          console.log(edit);
+                          // call the api and update the record
+                          handleUpdate(edit);
+                          return edit;
+                        } else {
+                          return record;
+                        }
+                      });
+                    });
+                    ResetEditing();
                   }}
-                  className="flex w-48 justify-center rounded-md mb-4 bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  footer={[
+                    <Button key="cancel" onClick={ResetEditing}>
+                      Cancel
+                    </Button>,
+                    <Button
+                      className="bg-indigo-600"
+                      key="submit"
+                      type="primary"
+                      loading={modalLoading}
+                      onClick={() => {
+                        setInventory((pre) => {
+                          return pre.map((record) => {
+                            if (record._id === edit._id) {
+                              console.log(record);
+                              console.log(edit);
+                              // call the api and update the record
+                              handleUpdate(edit);
+                              return edit;
+                            } else {
+                              return record;
+                            }
+                          });
+                        });
+                        ResetEditing();
+                      }}
+                    >
+                      Save
+                    </Button>,
+                  ]}
                 >
-                  Add new record
-                </button>
+                  <Form form={form}>
+                    <label htmlFor="name">Name</label>
+                    <Input
+                      id="name"
+                      value={edit?.name}
+                      onChange={(e) => {
+                        setEdit((pre) => {
+                          return { ...pre, name: e.target.value };
+                        });
+                      }}
+                      className="mb-3 rounded-lg"
+                    />
+                    <label htmlFor="category">Category</label>
+                    <Input
+                      id="category"
+                      value={edit?.category}
+                      onChange={(e) => {
+                        setEdit((pre) => {
+                          return { ...pre, category: e.target.value };
+                        });
+                      }}
+                      className="mb-3 rounded-lg"
+                    />
+                    <label htmlFor="unitPrice">Price</label>
+                    <Input
+                      id="unitPrice"
+                      value={edit?.unitPrice}
+                      onChange={(e) => {
+                        setEdit((pre) => {
+                          return { ...pre, unitPrice: e.target.value };
+                        });
+                      }}
+                      className="mb-3 rounded-lg"
+                    />
+                    <label htmlFor="quantityInStock">Quantity in Stock</label>
+                    <Input
+                      id="quantityInStock"
+                      value={edit?.quantityInStock}
+                      onChange={(e) => {
+                        setEdit((pre) => {
+                          return { ...pre, quantityInStock: e.target.value };
+                        });
+                      }}
+                      className="mb-3 rounded-lg"
+                    />
+                    <label htmlFor="shelfNumber">Shelf Number</label>
+                    <Input
+                      id="shelfNumber"
+                      value={edit?.shelfNumber}
+                      onChange={(e) => {
+                        setEdit((pre) => {
+                          return { ...pre, shelfNumber: e.target.value };
+                        });
+                      }}
+                      className="mb-3 rounded-lg"
+                    />
+                    <Form.Item name="orderDate" label="Order Date" rules={[{ required: true }]}>
+                      <DatePicker
+                        picker="date"
+                        onChange={(date, dateString) => {
+                          console.log(date);
+                          const dateT = date?.$d.toISOString();
+                          console.log(`Order date: `, dateT);
+                        }}
+                      />
+                      {selectedOrderDate && <p>Selected Date: {selectedOrderDate}</p>}
+                    </Form.Item>
+                    <Form.Item name="expiryDate" label="Expiry Date" rules={[{ required: true }]}>
+                      <DatePicker
+                        picker="date"
+                        disabledDate={disabledDate}
+                        onChange={(date, dateString) => {
+                          console.log(dateString);
+                          const dateT = date?.$d.toISOString();
+                          console.log(dateT);
+                        }}
+                      />
+                      {selectedMonth && <p>Selected Month: {selectedMonth}</p>}
+                    </Form.Item>
+                  </Form>
+                </Modal>
+
+                {/* Add record modal */}
+                <Modal
+                  title="Add new record"
+                  open={isAddModalOpen}
+                  okText="Save record"
+                  onCancel={() => onCancelAdd()}
+                  onOk={() => {
+                    onAddRecord();
+                    onCancelAdd();
+                  }}
+                  footer={[
+                    <Button key="cancel" onClick={onCancelAdd}>
+                      Cancel
+                    </Button>,
+                    <Button
+                      className="bg-indigo-600"
+                      key="submit"
+                      type="primary"
+                      loading={modalLoading}
+                      onClick={onAddRecord}
+                    >
+                      Submit
+                    </Button>,
+                  ]}
+                >
+                  <Form form={form}>
+                    <Form.Item name="name" label="Name" rules={[{ required: true }]}>
+                      <Input />
+                    </Form.Item>
+                    <Form.Item name="category" label="Category" rules={[{ required: true }]}>
+                      <Input />
+                    </Form.Item>
+                    <Form.Item name="unitPrice" label="Unit Price" rules={[{ required: true }]}>
+                      <Input />
+                    </Form.Item>
+                    <Form.Item
+                      name="quantityInStock"
+                      label="Quantity In Stock"
+                      rules={[{ required: true }]}
+                    >
+                      <Input />
+                    </Form.Item>
+                    <Form.Item name="shelfNumber" label="Shelf Number" rules={[{ required: true }]}>
+                      <Input />
+                    </Form.Item>
+                    <Form.Item name="orderDate" label="Order Date" rules={[{ required: true }]}>
+                      <DatePicker
+                        picker="date"
+                        onChange={(date, dateString) => {
+                          console.log(dateString);
+                          const dateT = date.$d.toISOString();
+                          console.log(`Order date: `, dateT);
+                        }}
+                      />
+                      {selectedOrderDate && <p>Selected Date: {selectedOrderDate}</p>}
+                    </Form.Item>
+                    <Form.Item name="expiryDate" label="Expiry Date" rules={[{ required: true }]}>
+                      <DatePicker
+                        picker="date"
+                        disabledDate={disabledDate}
+                        onChange={(date, dateString) => {
+                          console.log(dateString);
+                          const dateT = date.$d.toISOString();
+                          console.log(dateT);
+                        }}
+                      />
+                      {selectedMonth && <p>Selected Month: {selectedMonth}</p>}
+                    </Form.Item>
+                  </Form>
+                </Modal>
+                <div>
+                  <button
+                    onClick={() => {
+                      setIsAddModalOpen(true);
+                    }}
+                    className="flex w-48 justify-center rounded-md mb-4 bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  >
+                    Add new record
+                  </button>
+                </div>
               </div>
-            </main>
-          </div>
-        </section>
-      );
-    }
+            )}
+          </main>
+        </div>
+      </section>
+    );
   }
 }
 
