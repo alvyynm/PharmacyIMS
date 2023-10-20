@@ -143,19 +143,20 @@ function index() {
     //redirect to login page if unauthenticated
     return <Navigate replace to="/login" />;
   } else {
-    if (loading) {
-      return (
-        <section className="relative">
-          <div className="grid grid-cols-6 grid-rows-1 gap-12">
-            {/* Fixes nav to the left avoid overscroll */}
-            <div className="h-screen sticky top-0">
-              <Navbar />
+    return (
+      <section className="relative">
+        <div className="grid grid-cols-6 grid-rows-1 gap-12">
+          {/* Fixes nav to the left avoid overscroll */}
+          <div className="h-screen sticky top-0">
+            <Navbar />
+          </div>
+          <main className="col-span-5">
+            {/* Positions topbar to be sticky at the top on scroll */}
+            <div className="sticky top-0 left-0 right-0 z-50 bg-white">
+              <Topbar />
             </div>
-            <main className="col-span-5">
-              {/* Positions topbar to be sticky at the top on scroll */}
-              <div className="sticky top-0 left-0 right-0 z-50 bg-white">
-                <Topbar />
-              </div>
+            {loading ? (
+              // loading state
               <div className="h-screen flex flex-col items-center justify-center">
                 <div
                   className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
@@ -167,25 +168,8 @@ function index() {
                 </div>
                 <h1 className="mt-5">Loading sales data...</h1>
               </div>
-            </main>
-          </div>
-        </section>
-      );
-    }
-
-    if (error) {
-      return (
-        <section className="relative">
-          <div className="grid grid-cols-6 grid-rows-1 gap-12">
-            {/* Fixes nav to the left avoid overscroll */}
-            <div className="h-screen sticky top-0">
-              <Navbar />
-            </div>
-            <main className="col-span-5">
-              {/* Positions topbar to be sticky at the top on scroll */}
-              <div className="sticky top-0 left-0 right-0 z-50 bg-white">
-                <Topbar />
-              </div>
+            ) : error ? (
+              // error message if api call fails
               <div className="h-screen flex flex-col items-center justify-center">
                 <div>
                   <svg
@@ -205,68 +189,54 @@ function index() {
                 </div>
                 <h1 className="mt-5">Oops! An error ocurred when retrieving sales data...</h1>
               </div>
-            </main>
-          </div>
-        </section>
-      );
-    }
-    if (sales.length > 0) {
-      return (
-        <section className="relative">
-          <div className="grid grid-cols-6 grid-rows-1 gap-12">
-            {/* Fixes nav to the left avoid overscroll */}
-            <div className="h-screen sticky top-0">
-              <Navbar />
-            </div>
-            <main className="col-span-5">
-              {/* Positions topbar to be sticky at the top on scroll */}
-              <div className="sticky top-0 left-0 right-0 z-50 bg-white">
-                <Topbar />
-              </div>
+            ) : (
+              // display data after successful retrieval from api
               <div>
-                <div className="my-4">
-                  <Row gutter={16}>
-                    <Col span={8}>
-                      <Card title="Total Sales">KES {totalSales.toLocaleString()}</Card>
-                    </Col>
-                    <Col span={8}>
-                      <Card title={`${currentMonthName} Sales`}>
-                        KES {totalMonthlySales.toLocaleString()}
-                      </Card>
-                    </Col>
-                    <Col span={8}>
-                      <Card title="Today's Sales">KES {totalDailySales.toLocaleString()}</Card>
-                    </Col>
-                  </Row>
+                <div>
+                  <div className="my-4">
+                    <Row gutter={16}>
+                      <Col span={8}>
+                        <Card title="Total Sales">KES {totalSales.toLocaleString()}</Card>
+                      </Col>
+                      <Col span={8}>
+                        <Card title={`${currentMonthName} Sales`}>
+                          KES {totalMonthlySales.toLocaleString()}
+                        </Card>
+                      </Col>
+                      <Col span={8}>
+                        <Card title="Today's Sales">KES {totalDailySales.toLocaleString()}</Card>
+                      </Col>
+                    </Row>
+                  </div>
+                  <div className="printable-content">
+                    <Table dataSource={filteredData} columns={columns} pagination={false} />
+                  </div>
                 </div>
-                <div className="printable-content">
-                  <Table dataSource={filteredData} columns={columns} pagination={false} />
+                <div className="m-3">
+                  <p className="mb-3">Filter by Sales Date: </p>
+                  <RangePicker
+                    style={{ marginRight: 8 }}
+                    onChange={(dates) => {
+                      console.log(dates);
+                      if (dates && dates.length === 2) {
+                        setStartDate(dates[0].$d.toISOString());
+                        setEndDate(dates[1].$d.toISOString());
+                        console.log(startDate);
+                        console.log(endDate);
+                      }
+                    }}
+                  />
+                  <Button className="bg-indigo-600" type="primary" onClick={handleDateFilter}>
+                    Filter
+                  </Button>
+                  <Button onClick={clearDateFilter}>Reset</Button>
                 </div>
               </div>
-              <div className="m-3">
-                <p className="mb-3">Filter by Sales Date: </p>
-                <RangePicker
-                  style={{ marginRight: 8 }}
-                  onChange={(dates) => {
-                    console.log(dates);
-                    if (dates && dates.length === 2) {
-                      setStartDate(dates[0].$d.toISOString());
-                      setEndDate(dates[1].$d.toISOString());
-                      console.log(startDate);
-                      console.log(endDate);
-                    }
-                  }}
-                />
-                <Button className="bg-indigo-600" type="primary" onClick={handleDateFilter}>
-                  Filter
-                </Button>
-                <Button onClick={clearDateFilter}>Reset</Button>
-              </div>
-            </main>
-          </div>
-        </section>
-      );
-    }
+            )}
+          </main>
+        </div>
+      </section>
+    );
   }
 }
 
