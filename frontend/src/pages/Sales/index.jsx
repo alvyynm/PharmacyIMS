@@ -200,6 +200,25 @@ function index() {
                 <Topbar />
               </div>
               <div>
+                <div className="my-4">
+                  <Row gutter={16}>
+                    <Col span={8}>
+                      <Card title="Total Sales" bordered={false}>
+                        {totalSales}
+                      </Card>
+                    </Col>
+                    <Col span={8}>
+                      <Card title="Monthly Sales" bordered={false}>
+                        {totalMonthlySales}
+                      </Card>
+                    </Col>
+                    <Col span={8}>
+                      <Card title="Today's Sales" bordered={false}>
+                        {totalDailySales}
+                      </Card>
+                    </Col>
+                  </Row>
+                </div>
                 <div className="printable-content">
                   <Table dataSource={sales} columns={columns} pagination={false} />
                 </div>
