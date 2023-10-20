@@ -208,7 +208,7 @@ function index() {
                       </Card>
                     </Col>
                     <Col span={8}>
-                      <Card title="Monthly Sales" bordered={false}>
+                      <Card title={`${currentMonthName} Sales`} bordered={false}>
                         KES {totalMonthlySales.toLocaleString()}
                       </Card>
                     </Col>
