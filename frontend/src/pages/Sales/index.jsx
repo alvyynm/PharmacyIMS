@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import axios from 'axios';
-import { Table } from 'antd';
+import { Table, Card, Row, Col } from 'antd';
 import { Navigate } from 'react-router-dom';
 import moment from 'moment';
 import Navbar from '../../components/Navbar';
