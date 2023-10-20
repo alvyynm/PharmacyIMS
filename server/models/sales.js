@@ -23,6 +23,10 @@ const saleSchema = new Schema({
     type: Number,
     required: true,
   },
+  saleValue: {
+    type: Number,
+    required: true,
+  },
   saleDate: {
     type: Date,
     default: Date.now,
