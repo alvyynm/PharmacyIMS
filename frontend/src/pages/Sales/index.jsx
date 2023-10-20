@@ -1,35 +1,167 @@
-import React from 'react';
+import React, { useState, useContext, useEffect } from 'react';
+import axios from 'axios';
+import { Table } from 'antd';
+import { Navigate } from 'react-router-dom';
+import moment from 'moment';
 import Navbar from '../../components/Navbar';
 import Topbar from '../../components/Topbar';
+import { AuthContext } from '../../context/AuthContext';
+import { SalesContext } from '../../context/SalesContext';
 
 function index() {
-  return (
-    <section className="relative">
-      <div className="grid grid-cols-6 grid-rows-1 gap-12">
-        {/* Fixes nav to the left avoid overscroll */}
-        <div className="h-screen sticky top-0">
-          <Navbar />
-        </div>
-        <main className="col-span-5">
-          {/* Positions topbar to be sticky at the top on scroll */}
-          <div className="sticky top-0 left-0 right-0 z-50 bg-white">
-            <Topbar />
-          </div>
-          <div className="h-screen flex flex-col items-center justify-center">
-            <div
-              className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
-              role="status"
-            >
-              <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
-                Loading...
-              </span>
+  const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
+  const { sales, setSales } = useContext(SalesContext);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Retrieve the token from local storage
+  const token = localStorage.getItem('token');
+
+  useEffect(() => {
+    // API call to retrieve sales data from database
+    axios
+      .get('http://localhost:3001/v1/sales', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setSales(response.data.sales);
+        console.log(response.data.sales);
+        setLoading(false);
+      })
+      .catch((error) => {
+        setError(error);
+        setLoading(false);
+      });
+  }, [token]);
+
+  const columns = [
+    {
+      key: 'name',
+      title: 'Name',
+      dataIndex: 'name',
+    },
+    {
+      key: 'category',
+      title: 'Category',
+      dataIndex: 'category',
+    },
+    {
+      key: 'price',
+      title: 'Price',
+      dataIndex: 'price',
+    },
+    {
+      key: 'quantity',
+      title: 'Quantity',
+      dataIndex: 'quantity',
+    },
+    {
+      key: 'saleDate',
+      title: 'Sale Date',
+      dataIndex: 'saleDate',
+      render: (text) => moment(text).format('DD/MM/YY'), // Format the ISO date string
+      defaultSortOrder: 'descend',
+      sorter: (a, b) => moment(a.saleDate).unix() - moment(b.saleDate).unix(), // Custom sorting function
+    },
+  ];
+
+  if (!isLoggedIn) {
+    //redirect to login page if unauthenticated
+    return <Navigate replace to="/login" />;
+  } else {
+    if (loading) {
+      return (
+        <section className="relative">
+          <div className="grid grid-cols-6 grid-rows-1 gap-12">
+            {/* Fixes nav to the left avoid overscroll */}
+            <div className="h-screen sticky top-0">
+              <Navbar />
             </div>
-            <h1 className="mt-5">Sales data</h1>
+            <main className="col-span-5">
+              {/* Positions topbar to be sticky at the top on scroll */}
+              <div className="sticky top-0 left-0 right-0 z-50 bg-white">
+                <Topbar />
+              </div>
+              <div className="h-screen flex flex-col items-center justify-center">
+                <div
+                  className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+                  role="status"
+                >
+                  <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
+                    Loading...
+                  </span>
+                </div>
+                <h1 className="mt-5">Loading sales data...</h1>
+              </div>
+            </main>
           </div>
-        </main>
-      </div>
-    </section>
-  );
+        </section>
+      );
+    }
+
+    if (error) {
+      return (
+        <section className="relative">
+          <div className="grid grid-cols-6 grid-rows-1 gap-12">
+            {/* Fixes nav to the left avoid overscroll */}
+            <div className="h-screen sticky top-0">
+              <Navbar />
+            </div>
+            <main className="col-span-5">
+              {/* Positions topbar to be sticky at the top on scroll */}
+              <div className="sticky top-0 left-0 right-0 z-50 bg-white">
+                <Topbar />
+              </div>
+              <div className="h-screen flex flex-col items-center justify-center">
+                <div>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="w-5 h-5 rtl:rotate-180"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18"
+                    />
+                  </svg>
+                </div>
+                <h1 className="mt-5">Oops! An error ocurred when retrieving sales data...</h1>
+              </div>
+            </main>
+          </div>
+        </section>
+      );
+    }
+    if (sales.length > 0) {
+      return (
+        <section className="relative">
+          <div className="grid grid-cols-6 grid-rows-1 gap-12">
+            {/* Fixes nav to the left avoid overscroll */}
+            <div className="h-screen sticky top-0">
+              <Navbar />
+            </div>
+            <main className="col-span-5">
+              {/* Positions topbar to be sticky at the top on scroll */}
+              <div className="sticky top-0 left-0 right-0 z-50 bg-white">
+                <Topbar />
+              </div>
+              <div>
+                <div className="printable-content">
+                  <Table dataSource={sales} columns={columns} pagination={false} />
+                </div>
+              </div>
+            </main>
+          </div>
+        </section>
+      );
+    }
+  }
 }
 
 export default index;
