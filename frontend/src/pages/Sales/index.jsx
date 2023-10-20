@@ -1,8 +1,9 @@
 import React, { useState, useContext, useEffect } from 'react';
 import axios from 'axios';
-import { Table, Card, Row, Col } from 'antd';
+import { Table, Card, Row, Col, Button, DatePicker } from 'antd';
 import { Navigate } from 'react-router-dom';
 import moment from 'moment';
+const { RangePicker } = DatePicker;
 import Navbar from '../../components/Navbar';
 import Topbar from '../../components/Topbar';
 import { AuthContext } from '../../context/AuthContext';
@@ -13,6 +14,10 @@ function index() {
   const { sales, setSales } = useContext(SalesContext);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [filteredData, setFilteredData] = useState(sales);
 
   // Retrieve the token from local storage
   const token = localStorage.getItem('token');
@@ -115,6 +120,25 @@ function index() {
     },
   ];
 
+  // SALES DATA FILTER
+  const handleDateFilter = () => {
+    const filteredResult = sales.filter((item) => {
+      const itemDate = moment(item.saleDate);
+      if (startDate && endDate) {
+        console.log(startDate, endDate);
+        return itemDate.isBetween(startDate, endDate, null, '[]');
+      }
+      return true; // No date range selected, show all data
+    });
+    setFilteredData(filteredResult);
+  };
+
+  const clearDateFilter = () => {
+    setStartDate(null);
+    setEndDate(null);
+    setFilteredData(sales);
+  };
+
   if (!isLoggedIn) {
     //redirect to login page if unauthenticated
     return <Navigate replace to="/login" />;
@@ -216,8 +240,27 @@ function index() {
                   </Row>
                 </div>
                 <div className="printable-content">
-                  <Table dataSource={sales} columns={columns} pagination={false} />
+                  <Table dataSource={filteredData} columns={columns} pagination={false} />
                 </div>
+              </div>
+              <div className="m-3">
+                <p className="mb-3">Filter by Sales Date: </p>
+                <RangePicker
+                  style={{ marginRight: 8 }}
+                  onChange={(dates) => {
+                    console.log(dates);
+                    if (dates && dates.length === 2) {
+                      setStartDate(dates[0].$d.toISOString());
+                      setEndDate(dates[1].$d.toISOString());
+                      console.log(startDate);
+                      console.log(endDate);
+                    }
+                  }}
+                />
+                <Button className="bg-indigo-600" type="primary" onClick={handleDateFilter}>
+                  Filter
+                </Button>
+                <Button onClick={clearDateFilter}>Reset</Button>
               </div>
             </main>
           </div>
