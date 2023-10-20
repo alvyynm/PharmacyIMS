@@ -36,17 +36,16 @@ function index() {
       });
   }, [token]);
 
+  // Get the current month and year
+  const currentDate = new Date();
+  const currentMonth = currentDate.getMonth() + 1; // Months are zero-based, so add 1
+  const currentYear = currentDate.getFullYear();
   let totalSales = 0;
   let totalDailySales = 0;
   let totalMonthlySales = 0;
   if (sales) {
     // calculate total sales
     totalSales = sales.reduce((sum, obj) => sum + obj.saleValue, 0);
-
-    // Get the current month and year
-    const currentDate = new Date();
-    const currentMonth = currentDate.getMonth() + 1; // Months are zero-based, so add 1
-    const currentYear = currentDate.getFullYear();
 
     // Calculate total sales within the current month
     totalMonthlySales = sales.reduce((sum, obj) => {
