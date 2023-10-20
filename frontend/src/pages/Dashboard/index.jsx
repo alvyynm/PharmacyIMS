@@ -315,7 +315,6 @@ function index() {
     //redirect to login page if unauthenticated
     return <Navigate replace to="/login" />;
   } else {
-    // if (loading) {
     return (
       <section className="relative">
         <div className="grid grid-cols-6 grid-rows-1 gap-12">
