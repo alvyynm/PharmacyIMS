@@ -36,6 +36,49 @@ function index() {
       });
   }, [token]);
 
+  let totalSales = 0;
+  let totalDailySales = 0;
+  let totalMonthlySales = 0;
+  if (sales) {
+    // calculate total sales
+    totalSales = sales.reduce((sum, obj) => sum + obj.saleValue, 0);
+
+    // Get the current month and year
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth() + 1; // Months are zero-based, so add 1
+    const currentYear = currentDate.getFullYear();
+
+    // Calculate total sales within the current month
+    totalMonthlySales = sales.reduce((sum, obj) => {
+      // Parse the saleDate string to a Date object
+      const saleDate = new Date(obj.saleDate);
+
+      // Check if the saleDate is within the current month and year
+      if (saleDate.getMonth() + 1 === currentMonth && saleDate.getFullYear() === currentYear) {
+        return sum + obj.saleValue;
+      }
+
+      return sum;
+    }, 0);
+
+    // Calculate today's sales
+    totalDailySales = sales.reduce((sum, obj) => {
+      // Parse the saleDate string to a Date object
+      const saleDate = new Date(obj.saleDate);
+
+      // Check if the saleDate is equal to the current date
+      if (
+        saleDate.getDate() === currentDate.getDate() &&
+        saleDate.getMonth() === currentDate.getMonth() &&
+        saleDate.getFullYear() === currentDate.getFullYear()
+      ) {
+        return sum + obj.saleValue;
+      }
+
+      return sum;
+    }, 0);
+  }
+
   const columns = [
     {
       key: 'name',
