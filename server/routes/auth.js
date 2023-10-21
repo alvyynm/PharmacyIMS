@@ -33,7 +33,6 @@ router.put(
         "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
       ),
     body("name").trim().not().isEmpty(),
-    // body("role").trim().not().isEmpty(),
   ],
   authController.signup
 );
