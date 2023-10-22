@@ -10,6 +10,7 @@ const {
 } = require("../services/passwordreset");
 
 const secret = process.env.MY_SECRET_KEY;
+const bcryptSalt = process.env.BCRYPT_SALT;
 
 const User = require("../models/user");
 
@@ -28,7 +29,7 @@ exports.signup = (req, res, next) => {
   const name = req.body.name;
 
   bcrypt
-    .hash(password, 12)
+    .hash(password, bcryptSalt)
     .then((hashedPwd) => {
       const user = new User({
         email: email,
