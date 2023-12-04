@@ -29,7 +29,7 @@ exports.signup = (req, res, next) => {
   const name = req.body.name;
 
   bcrypt
-    .hash(password, bcryptSalt)
+    .hash(password, +bcryptSalt)
     .then((hashedPwd) => {
       const user = new User({
         email: email,
